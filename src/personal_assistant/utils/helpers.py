@@ -4,12 +4,10 @@ Helper functions for the Personal Assistant.
 import os
 import platform
 import argparse
+from typing import Dict
 from tabulate import tabulate
-from typing import List, Dict, Any
 from colorama import init, Fore, Back
 from pyfiglet import Figlet
-from personal_assistant.commands.contact_commands import handle_contact_commands
-from personal_assistant.commands.note_commands import handle_note_commands
 
 init(autoreset=True)
 print(Back.RED)
@@ -27,7 +25,7 @@ def print_centered(text, term_width, color):
     """
     lines = text.split('\n')
     for line in lines:
-        # Вирівнюємо текст по центру
+        # Align text to the center
         print(color + line.center(term_width))
 
 

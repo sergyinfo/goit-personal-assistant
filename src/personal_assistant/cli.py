@@ -4,12 +4,11 @@ It parses the command line arguments and calls the appropriate functions
 based on the command and entity types.
 """
 import argparse
-from personal_assistant.enums.command_types import Entity
 from personal_assistant.commands.contact_commands import handle_contact_commands
 from personal_assistant.commands.note_commands import handle_note_commands
 from personal_assistant.utils.helpers import clear_screen, hello_screen
 
-def setup_parsers():
+def setup_parsers() -> tuple:
     """
     Setup the command line parsers.
     """
