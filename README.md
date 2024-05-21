@@ -8,6 +8,9 @@
 
 - `src/`: Вихідний код програми.
   - `personal_assistant`: Каталог з файлами пакету
+    - `commands/`: Обробники cli команд
+      - `contact_commands.py`: визначення команд для роботи з контактами
+      - `note_commands.py`: визначення команд для роботи з нотатками
     - `models/`: Моделі даних для представлення бізнес-об'єктів.
       - `contact.py`: Клас `Contact` для управління контактами.
       - `email_address.py`: Клас `EmailAddress` для роботи з електронними адресами.
@@ -77,5 +80,6 @@
 
 ## 4. Запустіть програму з командного рядка:
     ```bash
-    python src/main.py
+    cd src
+    python -m personal_assistant
     ```
