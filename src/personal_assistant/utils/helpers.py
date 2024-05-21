@@ -10,7 +10,25 @@ from colorama import init, Fore, Back
 from pyfiglet import Figlet
 
 init(autoreset=True)
-print(Back.RED)
+
+def get_commands(parsers):
+    """ Рекурсивно отримує команди з кожного субпарсера. """
+    commands = []
+    for name, parser in parsers.items():
+        sub_commands = _get_commands_from_parser(parser, prefix=name)
+        commands.extend(sub_commands)
+    return commands
+
+def _get_commands_from_parser(parser, prefix=''):
+    """ Допоміжна функція для рекурсивного отримання команд. """
+    local_commands = []
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            for choice, subparser in action.choices.items():
+                cmd = f"{prefix} {choice}" if prefix else choice
+                local_commands.append(cmd)
+                local_commands.extend(_get_commands_from_parser(subparser, prefix=cmd))
+    return local_commands
 
 def get_terminal_size():
     """
