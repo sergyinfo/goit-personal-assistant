@@ -18,7 +18,7 @@ class JsonStorage(Storage):
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except IOError as e:
-            raise IOError(f"Failed to load data from {path}: {e}")
         except json.JSONDecodeError as e:
             raise ValueError(f"Data in {path} is not valid JSON: {e}")
+        except IOError as e:
+            raise IOError(f"Failed to load data from {path}: {e}")

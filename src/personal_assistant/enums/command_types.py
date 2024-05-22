@@ -7,9 +7,9 @@ class Command(Enum):
     """
     Enum class for command types
     """
-    ADD = "add"
-    EDIT = "edit"
-    DELETE = "delete"
+    ADD = "плюс"
+    EDIT = "плюс_плюс"
+    DELETE = "мінус"
     SEARCH = "search"
     LIST = "list"
     ADD_PHONE = "add-phone"
