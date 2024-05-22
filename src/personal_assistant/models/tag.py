@@ -8,16 +8,15 @@ class Tag:
             EntityType.CONTACT: set(),
             EntityType.NOTE: set(),
         }
-    
+
     def associate_with(self, obj_type: EntityType, obj_id: str) -> None:
         self.associations[obj_type].add(obj_id)
-    
+
     def dissociate_from(self, obj_type: EntityType, obj_id: str) -> None:
         self.associations[obj_type].discard(obj_id)
-    
+
     def __str__(self) -> str:
         return f"Tag(name={self.name}, associations={self.associations})"
-    
+
     def __repr__(self) -> str:
         return self.__str__()
-
