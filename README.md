@@ -39,30 +39,46 @@
 
 Для встановлення та запуску проекту виконайте наступні кроки:
 
-1. Клонуйте репозиторій:
+## 0. Перевірка залежностей
+  ### Для Linux/MacOS:
+  Переконайтесь що бібліотека readline встановлена або встановіть її
+  ```bash
+  pip install readline
+  ```
+
+  ### Для Windows:
+  Переконайтесь що бібліотека pyreadline встановлена або встановіть її
+  ```bash
+  pip install pyreadline
+  ```
+
+## 1. Клонуйте репозиторій:
    ```bash
    git clone https://github.com/sergyinfo/goit-personal-assistant
    cd goit-personal-assistant
    ```
 
-2. Створіть та активуйте віртуальне середовище:
-    ### Для Linux/MacOS:
-   ```bash
+## 2. Створіть та активуйте віртуальне середовище:
+   ### Для Linux/MacOS:
+    
+    ```bash
     python3 -m venv venv
     source venv/bin/activate
     ```
-    ### Для Windows:
-   ```bash
+
+   ### Для Windows:
+
+    ```bash
     python -m venv venv
     .\venv\Scripts\activate
     ```
 
-3. Встановіть необхідні залежності:
+## 3. Встановіть необхідні залежності:
     ```bash
     pip install -r requirements.txt
     ```
 
-4. Запустіть програму з командного рядка:
+## 4. Запустіть програму з командного рядка:
     ```bash
     cd src
     python -m personal_assistant
