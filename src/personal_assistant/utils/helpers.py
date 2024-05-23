@@ -11,7 +11,6 @@ def get_commands(parsers: Dict[str, argparse.ArgumentParser]) -> list[str]:
     for name, parser in parsers.items():
         sub_commands = _get_commands_from_parser(parser, prefix=name)
         commands.extend(sub_commands)
-    print(commands)
     return commands
 
 def _get_commands_from_parser(parser: Dict, prefix: str = '') -> list[str]:

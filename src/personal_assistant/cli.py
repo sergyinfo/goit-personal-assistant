@@ -5,6 +5,7 @@ based on the command and entity types.
 """
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
+from personal_assistant.services.cli_completer import CommandCompleter
 from personal_assistant.utils.helpers import get_commands
 from personal_assistant.utils.cli_setup import (
     setup_parsers,
@@ -24,9 +25,7 @@ def main() -> None:
     parser, parsers = setup_parsers()
     commands = get_commands(parsers)
 
-    command_completer = WordCompleter(commands, ignore_case=True)
-
-    session = PromptSession(completer=command_completer)
+    session = PromptSession(completer=CommandCompleter(commands=commands))
 
     hello_screen(parsers)
 
