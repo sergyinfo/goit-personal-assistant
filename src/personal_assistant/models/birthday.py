@@ -1,4 +1,11 @@
+"""
+This is the Birthday class for the personal assistant application. It parses the converts input data into datetime.date object and 
+validates the data, get_next_birthday method returns the next birthday of the contact, get_age mathod returns the age of the contact, 
+__str__ method returns a time representation of a datetime.date object in "day.month.year" format.
+"""
+
 from datetime import datetime, date, timedelta
+from typing import Optional
 
 class Birthday:
     def __init__(self, date_input):
@@ -14,12 +21,20 @@ class Birthday:
         if self.date > date.today():
             raise ValueError("Дата народження не може бути у майбутньому.")
 
-    def get_next_birthday(self, today=None):
+    def get_next_birthday(self, today: Optional[date] = None) -> date:
         if today is None:
             today = date.today()
-        next_birthday = self.date.replace(year=today.year)
-        if next_birthday < today:
-            next_birthday = next_birthday.replace(year=today.year + 1)
+        
+        year = today.year if today <= date(today.year, self.date.month, self.date.day) else today.year + 1
+
+        try:
+            next_birthday = date(year, self.date.month, self.date.day)
+        except ValueError:  # 29 лютого у не-високосний рік
+            if self.date.month == 2 and self.date.day == 29:
+                next_birthday = date(year, 3, 1)  # Переносимо на 1 березня
+            else:
+                raise
+
         return next_birthday
 
     def get_age(self, today=None):
@@ -32,18 +47,3 @@ class Birthday:
 
     def __str__(self):
         return self.date.strftime("%d.%m.%Y")
-    
-"""
-# Приклад використання
-if __name__ == "__main__":
-    input_date = input("Введіть дату народження в форматі 'ДД.ММ.РРРР': ")
-    try:
-        birthday = Birthday(input_date)
-        print("Дата народження:", birthday)
-        print("Наступний день народження:", birthday.get_next_birthday())
-        print("Вік:", birthday.get_age())
-    except ValueError as e:
-        print("Помилка валідації дати народження:")
-        print(e)
-
-"""
