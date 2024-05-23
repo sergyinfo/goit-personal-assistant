@@ -1,4 +1,5 @@
 import uuid
+import json
 from datetime import datetime, timedelta
 
 from email_address import EmailAddress
@@ -197,3 +198,33 @@ class Contact:
         self.notes = []
         self.emails = []
         self.tags = set()
+
+   #Serialization
+   
+    def to_json(self):
+        contact_dict = {
+            "uuid": self.uuid,
+            "name": self.name,
+            "birthday": str(self.birthday) if self.birthday else None,
+            "phone_numbers": [str(phone) for phone in self.phone_numbers],
+            "emails": [str(email) for email in self.emails],
+            "addresses": [str(address) for address in self.addresses],
+            "notes": [str(note) for note in self.notes],
+            "tags": list(self.tags)
+        }
+        return json.dumps(contact_dict, ensure_ascii=False, indent=4)
+
+    #Deserialization
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = json.loads(json_str)
+        contact = cls(data["name"])
+        contact.uuid = data["uuid"]
+        contact.birthday = Birthday(data["birthday"]) if data["birthday"] else None
+        contact.phone_numbers = [PhoneNumber(phone) for phone in data["phone_numbers"]]
+        contact.emails = [EmailAddress(email) for email in data["emails"]]
+        contact.addresses = [Address(address) for address in data["addresses"]]
+        contact.notes = [Note(note) for note in data["notes"]]
+        contact.tags = set(data["tags"])
+        return contact   
