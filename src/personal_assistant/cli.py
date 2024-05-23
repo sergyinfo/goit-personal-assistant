@@ -3,10 +3,11 @@ This module is the cli module for the personal assistant application.
 It parses the command line arguments and calls the appropriate functions 
 based on the command and entity types.
 """
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter
 from personal_assistant.utils.helpers import get_commands
 from personal_assistant.utils.cli_setup import (
     setup_parsers,
-    setup_readline,
     handle_command,
     clear_screen,
     hello_screen
@@ -20,52 +21,21 @@ def main() -> None:
 
     # Clear the screen and setup the parsers for autocomplete
     clear_screen()
-    readline = setup_readline()
     parser, parsers = setup_parsers()
     commands = get_commands(parsers)
 
-    def complete(text, state):
-        buffer = readline.get_line_buffer()
-        stripped_buffer = buffer.strip()
+    command_completer = WordCompleter(commands, ignore_case=True)
 
-        # If the buffer is empty or the text is empty, show all commands
-        if not stripped_buffer and text == '':
-            completions = sorted(commands)  # Sort the commands
-        else:
-            # Trim the buffer to get the base command
-            parts = buffer.strip().split()
+    session = PromptSession(completer=command_completer)
 
-            # Get the base command and the sub-command part
-            base_command = parts[0] if parts else ''
-            if len(parts) > 1:
-                sub_command_part = ' '.join(parts[1:])
-            else:
-                sub_command_part = ''
-
-            if not text:
-                # User hit tab without typing anything
-                filtered_commands = [
-                    cmd for cmd in commands if cmd.startswith(base_command + ' ' + sub_command_part)
-                ]
-            else:
-                # Filter the commands based on the text
-                filtered_commands = [
-                    cmd for cmd in commands if cmd.startswith(buffer.rstrip())
-                ]
-
-            completions = [command[len(buffer) - len(text):] for command in filtered_commands]
-        return completions[state] if state < len(completions) else None
-
-    readline.set_completer(complete)
-    readline.parse_and_bind('tab: complete')
     hello_screen(parsers)
 
     try:
         while True:
-            user_input = input("Enter your command: ")
+            user_input = session.prompt("Enter your command: ")
             if user_input.strip().lower() == 'exit':
                 clear_screen()
-                print("Завершення програми...")
+                print("Ending program...")
                 break
 
             # Arguments parsing

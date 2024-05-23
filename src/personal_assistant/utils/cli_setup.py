@@ -3,9 +3,8 @@ Module for setting up the command line interface
 """
 import os
 import platform
-from typing import Any, Callable, Dict
+from typing import Dict
 import argparse
-import sys
 from tabulate import tabulate
 from colorama import init, Fore, Back
 from pyfiglet import Figlet
@@ -13,20 +12,6 @@ from personal_assistant.commands.contact_commands import handle_contact_commands
 from personal_assistant.commands.note_commands import handle_note_commands
 
 init(autoreset=True)
-
-def setup_readline():
-    """
-    Setup the readline module for command line completion based on user platform
-    """
-    if platform.system() == 'Windows':
-        try:
-            import pyreadline as readline
-        except ImportError:
-            print("Install pyreadline package for command line completion on Windows")
-            sys.exit(1)
-    else:
-        import readline
-    return readline
 
 
 def setup_parsers() -> tuple:
