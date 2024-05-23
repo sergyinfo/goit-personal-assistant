@@ -47,33 +47,33 @@
 Для встановлення та запуску проекту виконайте наступні кроки:
 
 ## 1. Клонуйте репозиторій:
-   ```bash
-   git clone https://github.com/sergyinfo/goit-personal-assistant
-   cd goit-personal-assistant
-   ```
+  ```bash
+  git clone https://github.com/sergyinfo/goit-personal-assistant
+  cd goit-personal-assistant
+  ```
 
 ## 2. Створіть та активуйте віртуальне середовище:
    ### Для Linux/MacOS:
     
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
 
    ### Для Windows:
 
-    ```bash
-    python -m venv venv
-    .\venv\Scripts\activate
-    ```
+  ```bash
+  python -m venv venv
+  .\venv\Scripts\activate
+  ```
 
 ## 3. Встановіть необхідні залежності:
-    ```bash
-    pip install -r requirements.txt
-    ```
+  ```bash
+  pip install -r requirements.txt
+  ```
 
 ## 4. Запустіть програму з командного рядка:
-    ```bash
-    cd src
-    python -m personal_assistant
-    ```
+  ```bash
+  cd src
+  python -m personal_assistant
+  ```
