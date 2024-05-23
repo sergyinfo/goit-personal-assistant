@@ -82,12 +82,13 @@ def hello_screen(parsers: Dict[str, argparse.ArgumentParser]) -> None:
     """
     _, term_width = get_terminal_size()
 
-    figlet = Figlet(font='slant', width=term_width)
+    # figlet = Figlet(font='starwars', width=term_width)
+    figlet = Figlet(font='larry3d', width=term_width)
     welcome_text1 = figlet.renderText('Welcome To')
     welcome_text2 = figlet.renderText('BRO Assistant')
 
-    print_centered(welcome_text1, term_width, Fore.BLACK + Back.YELLOW)
-    print_centered(welcome_text2, term_width, Fore.WHITE + Back.BLUE)
+    print_centered(welcome_text1, term_width, Fore.WHITE + Back.BLUE)
+    print_centered(welcome_text2, term_width, Fore.BLACK + Back.YELLOW)
     print("\n")
 
     headers = ["Команда", "Опис", "Параметри"]
