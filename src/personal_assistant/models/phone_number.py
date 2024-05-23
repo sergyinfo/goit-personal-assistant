@@ -36,17 +36,3 @@ class PhoneNumber:
             
     def __str__(self):
         return self.format_number()
-
-# check
-# phone1 = PhoneNumber("0501234567")
-# phone2 = PhoneNumber("+38 (050) 123-45-67")
-# phone3 = PhoneNumber("+48 501-234-567")
-
-# print(phone1)
-# print(phone2)
-# print(phone3)
-
-# country_codes = {
-#     "Ukraine": "+380",
-#     "Poland": "+48",
-# }
