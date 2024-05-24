@@ -7,11 +7,7 @@ to check upcoming birthdays and to manage tags associated with the contact.
 import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
-from personal_assistant.models import EmailAddress
-from personal_assistant.models import Address
-from personal_assistant.models import Birthday
-from personal_assistant.models import Note
-from personal_assistant.models import PhoneNumber
+from personal_assistant.models import EmailAddress, Address, Birthday, Note, PhoneNumber
 from personal_assistant.services import TagManagerService
 from personal_assistant.enums import EntityType
 from personal_assistant.utils.helpers import to_comma_separated_string
@@ -27,7 +23,7 @@ class Contact:
             contact_id: Optional[str] = None
         ) -> None:
         self.tag_manager: TagManagerService = TagManagerService()
-        self.id: str = contact_id or str(uuid.uuid4())
+        self.id: str = contact_id or str(uuid.uuid4())[:8]
         self.name: str = name
         self.birthday: Birthday = None
         self.phone_numbers: List[PhoneNumber] = []
