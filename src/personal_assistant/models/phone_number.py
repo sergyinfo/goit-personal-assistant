@@ -47,14 +47,14 @@ class PhoneNumber:
         """
         Convert the phone number to a dictionary
         """
-        return {"number": self.number}
+        return self.number
 
     @classmethod
     def from_dict(cls, data):
         """
         Create a new PhoneNumber object from a dictionary
         """
-        return cls(number=data["number"])
+        return cls(number=data)
 
     def __str__(self):
         return self.format_number()

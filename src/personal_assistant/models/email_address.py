@@ -24,14 +24,14 @@ class EmailAddress:
         """
         Convert the email address to a dictionary
         """
-        return {"email": self.email}
+        return self.email
     
     @classmethod
     def from_dict(cls, data):
         """
         Create a new EmailAddress object from a dictionary
         """
-        return cls(email=data["email"])
+        return cls(email=data)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

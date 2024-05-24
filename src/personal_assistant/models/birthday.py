@@ -66,14 +66,14 @@ class Birthday:
         """
         Convert the birthday to a dictionary
         """
-        return {"date": self.date.strftime("%d.%m.%Y")}
+        return self.date.strftime("%d.%m.%Y")
 
     @classmethod
     def from_dict(cls, data):
         """
         Create a new Birthday object from a dictionary
         """
-        return cls(date_input=data["date"])
+        return cls(date_input=data)
 
     def __str__(self):
         return self.date.strftime("%d.%m.%Y")
