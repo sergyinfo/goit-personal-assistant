@@ -7,7 +7,7 @@ class Command(Enum):
     """
     Enum class for command types
     """
-    ADD = "add"
+    ADD = "+"
     EDIT = "edit"
     DELETE = "delete"
     SEARCH = "search"

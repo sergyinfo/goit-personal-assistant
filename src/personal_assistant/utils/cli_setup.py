@@ -11,6 +11,7 @@ from colorama import init, Fore, Back
 from pyfiglet import Figlet
 from personal_assistant.commands.contact_commands import handle_contact_commands
 from personal_assistant.commands.note_commands import handle_note_commands
+from personal_assistant.enums.command_types import Entity
 
 init(autoreset=True)
 
@@ -26,14 +27,14 @@ def setup_parsers() -> Tuple[argparse.ArgumentParser, Dict[str, argparse.Argumen
     parsers = {}
 
     # Contacts parser
-    contact_parser = subparsers.add_parser('contacts', help='Керування контактами')
+    contact_parser = subparsers.add_parser(Entity.CONTACT.value, description='Керування контактами')
     handle_contact_commands(contact_parser)
-    parsers['contacts'] = contact_parser
+    parsers[Entity.CONTACT.value] = contact_parser
 
     # Notes parser
-    note_parser = subparsers.add_parser('notes', help='Керування нотатками')
+    note_parser = subparsers.add_parser(Entity.NOTE.value, description='Керування нотатками')
     handle_note_commands(note_parser)
-    parsers['notes'] = note_parser
+    parsers[Entity.NOTE.value] = note_parser
 
     return parser, parsers
 

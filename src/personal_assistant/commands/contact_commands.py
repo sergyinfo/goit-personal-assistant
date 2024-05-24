@@ -23,7 +23,7 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
 
     # Contact add
     add_parser = subparsers.add_parser(Command.ADD.value, help='Додати контакт')
-    add_parser.add_argument('--name', required=True, help='Ім\'я контакту')
+    add_parser.add_argument('--позивний', required=True, help='Ім\'я контакту')
     add_parser.add_argument('--birthday', help='Дата народження')
     add_parser.add_argument('--note', help='Примітка')
     add_parser.set_defaults(func=add_contact)
@@ -148,9 +148,9 @@ def add_contact(args: argparse.Namespace) -> None:
     if args.note is not None:
         note = Note(args.note, address_book.tag_manager)
 
-    contact = Contact(args.name, birthday, note)
+    contact = Contact(args.позивний, birthday, note)
     address_book.set_contact(contact)
-    print(f"Контакт {args.name} успішно додано з ID {contact.id}")
+    print(f"Контакт {args.позивний} успішно додано з ID {contact.id}")
     address_book.save()
 
 
