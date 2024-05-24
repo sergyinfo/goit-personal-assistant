@@ -6,20 +6,20 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from personal_assistant.enums import *
-from personal_assistant.models import NoteHistoryEntry, TagManager
+from personal_assistant.enums import EntityType
+from personal_assistant.models.note_history_entry import NoteHistoryEntry
 
 class Note:
     """
     A class to represent a note
     """
-    def __init__(self, text: str, tags: Optional[List[str]] = None, note_id: Optional[str] = None, default_tags: Optional[List[str]] = None) -> None:
+    def __init__(self, text: str, tag_manager, tags: Optional[List[str]] = None, note_id: Optional[str] = None, default_tags: Optional[List[str]] = None) -> None:
         self.note_id: str = note_id or str(uuid.uuid4())
         self.text: str = text
         self.created_at: datetime = datetime.now()
         self.updated_at: datetime = datetime.now()
         self.tags: List[str] = tags or []
-        self.tag_manager: TagManager = TagManager()
+        self.tag_manager = tag_manager
         self.is_archived: bool = False
         self.note_history: List[NoteHistoryEntry] = []
 
@@ -44,7 +44,7 @@ class Note:
         """
         if tag not in self.tags:
             self.tags.append(tag)
-            # TODO: self.tag_manager.add_tag(tag, EntityType.NOTE, self.note_id)
+            self.tag_manager.add_tag(tag, EntityType.NOTE, self.note_id)
 
     def remove_tag(self, tag: str) -> None:
         """
@@ -52,7 +52,7 @@ class Note:
         """
         if tag in self.tags:
             self.tags.remove(tag)
-            # TODO self.tag_manager.remove_tag(tag, EntityType.NOTE, self.note_id)
+            self.tag_manager.remove_tag(tag, EntityType.NOTE, self.note_id)
 
     def get_tags(self) -> List[str]:
         """
