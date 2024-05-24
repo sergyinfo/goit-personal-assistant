@@ -68,14 +68,43 @@ class Address:
         """
         return "Введіть адресу в форматі: вулиця, номер будинку, [номер квартири,] [місто,] [штат,] [поштовий індекс,] [країна]."
 
+    def to_dict(self):
+        """
+        Convert the address to a dictionary
+        """
+        return {
+            "street": self.street,
+            "house_number": self.house_number,
+            "apartment_number": self.apartment_number,
+            "city": self.city,
+            "state": self.state,
+            "postal_code": self.postal_code,
+            "country": self.country
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Create a new Address object from a dictionary
+        """
+        address = cls("")
+        address.street = data["street"]
+        address.house_number = data["house_number"]
+        address.apartment_number = data["apartment_number"]
+        address.city = data["city"]
+        address.state = data["state"]
+        address.postal_code = data["postal_code"]
+        address.country = data["country"]
+        return address
+
     def __str__(self):
         parts = [
-            self.street, 
-            self.house_number, 
-            self.apartment_number, 
-            self.city, 
-            self.state, 
-            self.postal_code, 
+            self.street,
+            self.house_number,
+            self.apartment_number,
+            self.city,
+            self.state,
+            self.postal_code,
             self.country
         ]
         return ", ".join(filter(None, parts))

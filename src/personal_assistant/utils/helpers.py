@@ -6,7 +6,9 @@ import argparse
 from typing import Dict
 
 def get_commands(parsers: Dict[str, argparse.ArgumentParser]) -> list[str]:
-    """ Рекурсивно отримує команди з кожного субпарсера. """
+    """
+    Recursively get commands from each subparser.
+    """
     commands = []
     for name, parser in parsers.items():
         sub_commands = _get_commands_from_parser(parser, prefix=name)
@@ -14,7 +16,9 @@ def get_commands(parsers: Dict[str, argparse.ArgumentParser]) -> list[str]:
     return commands
 
 def _get_commands_from_parser(parser: Dict, prefix: str = '') -> list[str]:
-    """ Допоміжна функція для рекурсивного отримання команд. """
+    """
+    Helper function to recursively get commands.
+    """
     local_commands = []
     for action in parser._actions:
         if isinstance(action, argparse._SubParsersAction):
@@ -23,3 +27,9 @@ def _get_commands_from_parser(parser: Dict, prefix: str = '') -> list[str]:
                 local_commands.append(cmd)
                 local_commands.extend(_get_commands_from_parser(subparser, prefix=cmd))
     return local_commands
+
+def to_comma_separated_string(items):
+    """
+    Convert a list of items to a comma-separated string.
+    """
+    return ", ".join(str(item) for item in items)

@@ -32,9 +32,8 @@ class PhoneNumber:
     def __eq__(self, other):
         if isinstance(other, PhoneNumber):
             return self.number == other.number
-        return False  
-    
-    
+        return False    
+
     def format_number(self) -> str:
         # Повертає форматований номер телефону.
         if len(self.number) == 10:
@@ -43,6 +42,19 @@ class PhoneNumber:
             return f"+{self.number[:2]} ({self.number[2:5]}) {self.number[5:8]} {self.number[8:10]} {self.number[10:]}"
         else:
             return f"+{self.number[:2]} {self.number[2:5]} {self.number[5:8]} {self.number[8:]}"
+
+    def to_dict(self):
+        """
+        Convert the phone number to a dictionary
+        """
+        return {"number": self.number}
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Create a new PhoneNumber object from a dictionary
+        """
+        return cls(number=data["number"])
 
     def __str__(self):
         return self.format_number()
