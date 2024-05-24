@@ -23,7 +23,7 @@ class Contact:
             contact_id: Optional[str] = None
         ) -> None:
         self.tag_manager: TagManagerService = TagManagerService()
-        self.id: str = contact_id or str(uuid.uuid4())
+        self.id: str = contact_id or str(uuid.uuid4())[:8]
         self.name: str = name
         self.birthday: Birthday = None
         self.phone_numbers: List[PhoneNumber] = []
