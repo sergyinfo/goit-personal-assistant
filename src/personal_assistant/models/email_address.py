@@ -19,13 +19,13 @@ class EmailAddress:
         """
         if not self.EMAIL_PATTERN.match(self.email):
             raise ValueError(f"Email address {self.email} is invalid")
-        
+
     def to_dict(self):
         """
         Convert the email address to a dictionary
         """
         return self.email
-    
+
     @classmethod
     def from_dict(cls, data):
         """

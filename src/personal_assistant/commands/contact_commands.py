@@ -32,7 +32,9 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     # Contact edit
     edit_parser = subparsers.add_parser(Command.EDIT.value, help='Редагувати контакт')
     edit_parser.add_argument('--id', required=True, help='ID контакта для редагування')
-    edit_parser.add_argument('--name', help='Нове ім\'я контакту')
+    edit_parser.add_argument('--name', required=True, help='Ім\'я контакту')
+    edit_parser.add_argument('--birthday', help='Дата народження')
+    edit_parser.add_argument('--note', help='Примітка')
     edit_parser.set_defaults(func=edit_contact)
 
     # Contact delete
@@ -142,9 +144,13 @@ def edit_contact(args: argparse.Namespace) -> None:
         return
 
     if args.name:
-        contact.name = args.name
+        contact.set_name(args.name)
 
-    # Other fields can be added here if needed
+    if args.birthday is not None:
+        contact.set_birthdate(Birthday(args.birthday))
+
+    if args.note is not None:
+        contact.set_note(Note(args.note, address_book.tag_manager))
 
     address_book.set_contact(contact)
     print(f"Контакт {args.id} успішно оновлено")

@@ -17,6 +17,12 @@ class AddressBook:
         self.tag_manager: TagManagerService = TagManagerService()
         self.contacts: Dict[str, Contact] = {}
 
+    def get_contact(self, contact_id: str) -> Contact:
+        """
+        Retrieves a contact by its ID.
+        """
+        return self.contacts.get(contact_id) or None
+
     def set_contact(self, contact: Contact) -> None:
         """
         Adds a new contact to the address book.
