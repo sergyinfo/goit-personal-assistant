@@ -131,38 +131,185 @@ def add_contact(args: argparse.Namespace) -> None:
     address_book.save()
 
 
+@input_error
 def edit_contact(args: argparse.Namespace) -> None:
-    print(f"Editing contact {args.id} to new name {args.name if args.name else 'not provided'}")
-    pass
+    """
+    Edit an existing contact in the address book
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
 
+    if args.name:
+        contact.name = args.name
+
+    # Other fields can be added here if needed
+
+    address_book.set_contact(contact)
+    print(f"Контакт {args.id} успішно оновлено")
+    address_book.save()
+
+
+@input_error
 def delete_contact(args: argparse.Namespace) -> None:
-    print(f"Deleting contact {args.id}")
-    pass
+    """
+    Delete a contact from the address book
+    """
+    address_book.remove_contact(args.id)
+    print(f"Контакт {args.id} успішно видалено")
+    address_book.save()
 
+
+@input_error
 def search_contacts(args: argparse.Namespace) -> None:
-    print(f"Searching contacts by name: {args.name if args.name else 'any'}, email: {args.email if args.email else 'any'}, phone: {args.phone if args.phone else 'any'}")
-    pass
+    """
+    Search for contacts in the address book
+    """
+    results = address_book.find(args.name or "")
+    if results:
+        for contact in results:
+            print(contact)
+    else:
+        print("Контакти не знайдено")
 
+
+@input_error
 def add_phone(args: argparse.Namespace) -> None:
-    print(f"Adding phone {args.phone} to contact {args.id}")
-    pass
+    """
+    Add a phone number to an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
 
+    contact.add_phone(args.phone)
+    address_book.set_contact(contact)
+    print(f"Телефонний номер {args.phone} успішно додано до контакту {args.id}")
+    address_book.save()
+
+
+@input_error
 def delete_phone(args: argparse.Namespace) -> None:
-    print(f"Deleting phone {args.phone} from contact {args.id}")
-    pass
+    """
+    Delete a phone number from an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
 
+    contact.remove_phone(args.phone)
+    address_book.set_contact(contact)
+    print(f"Телефонний номер {args.phone} успішно видалено з контакту {args.id}")
+    address_book.save()
+
+
+@input_error
 def add_email(args: argparse.Namespace) -> None:
-    print(f"Adding email {args.email} to contact {args.id}")
-    pass
+    """
+    Add an email to an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
 
+    contact.add_email(args.email)
+    address_book.set_contact(contact)
+    print(f"Електронну адресу {args.email} успішно додано до контакту {args.id}")
+    address_book.save()
+
+
+@input_error
 def delete_email(args: argparse.Namespace) -> None:
-    print(f"Deleting email {args.email} from contact {args.id}")
-    pass
+    """
+    Delete an email from an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
 
+    contact.remove_email(args.email)
+    address_book.set_contact(contact)
+    print(f"Електронну адресу {args.email} успішно видалено з контакту {args.id}")
+    address_book.save()
+
+
+@input_error
 def add_tag_to_contact(args: argparse.Namespace) -> None:
-    print(f"Adding tag {args.tag} to contact {args.id}")
-    pass
+    """
+    Add a tag to an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
 
+    contact.add_tag(args.tag)
+    address_book.set_contact(contact)
+    print(f"Тег {args.tag} успішно додано до контакту {args.id}")
+    address_book.save()
+
+
+@input_error
 def delete_tag_from_contact(args: argparse.Namespace) -> None:
-    print(f"Deleting tag {args.tag} from contact {args.id}")
-    pass
+    """
+    Delete a tag from an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
+
+    contact.remove_tag(args.tag)
+    address_book.set_contact(contact)
+    print(f"Тег {args.tag} успішно видалено з контакту {args.id}")
+    address_book.save()
+
+@input_error
+def add_address(args: argparse.Namespace) -> None:
+    """
+    Add an address to an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
+
+    contact.add_address(args.address)
+    address_book.set_contact(contact)
+    print(f"Адреса {args.address} успішно додано до контакту {args.id}")
+    address_book.save()
+
+
+@input_error
+def remove_address(args: argparse.Namespace) -> None:
+    """
+    Remove an address from an existing contact
+    """
+    contact = address_book.get_contact(args.id)
+    if not contact:
+        print(f"Контакт з ID {args.id} не знайдено")
+        return
+
+    contact.remove_address(args.address)
+    address_book.set_contact(contact)
+    print(f"Адреса {args.address} успішно видалено з контакту {args.id}")
+    address_book.save()
+
+
+@input_error
+def congratulations_date(args: argparse.Namespace) -> None:
+    """
+    List contacts with birthdays in a given number of days from today
+    """
+    days = int(args.days)
+    contacts = address_book.congratulations_date(days)
+    if contacts:
+        for contact in contacts:
+            print(contact)
+    else:
+        print("Немає контактів з днями народження у вказаний період")
