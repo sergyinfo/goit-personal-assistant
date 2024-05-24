@@ -7,7 +7,7 @@ from personal_assistant.models.contact import Contact
 from personal_assistant.models.note import Note
 from personal_assistant.models.birthday import Birthday
 from personal_assistant.services import AddressBook, StorageService
-from personal_assistant.services.storage.json_storage import JsonStorage
+from personal_assistant.services.storage.secure_json_storage import SecureJsonStorage
 from personal_assistant.utils.decorators import input_error
 
 def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
@@ -95,7 +95,7 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     delete_tag_parser.add_argument('--tag', required=True, help='Тег для видалення')
     delete_tag_parser.set_defaults(func=delete_tag_from_contact)
 
-storage_service = StorageService(JsonStorage())
+storage_service = StorageService(SecureJsonStorage())
 address_book = AddressBook(storage_service)
 try:
     address_book.load()
