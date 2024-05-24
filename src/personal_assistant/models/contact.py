@@ -1,49 +1,65 @@
+"""
+A Contact class that represents a contact in the personal assistant application. 
+The class has methods to add, edit, and remove contact information such as 
+phone numbers, email addresses, addresses, and tags. It also provides methods 
+to check upcoming birthdays and to manage tags associated with the contact.
+"""
 import uuid
 from datetime import datetime, timedelta
-
-from personal_assistant.models.email_address import EmailAddress
-from personal_assistant.models.address import Address
-from personal_assistant.models.birthday import Birthday
-from personal_assistant.models.note import Note
-from personal_assistant.models.phone_number import PhoneNumber
-from personal_assistant.services.tag_manager import TagManagerService
+from typing import List, Optional
+from personal_assistant.models import EmailAddress
+from personal_assistant.models import Address
+from personal_assistant.models import Birthday
+from personal_assistant.models import Note
+from personal_assistant.models import PhoneNumber
+from personal_assistant.services import TagManagerService
 from personal_assistant.enums import EntityType
+from personal_assistant.utils.helpers import to_comma_separated_string
 
 class Contact:
     """
     This is the Contact class for the personal assistant application.
     """
-    def __init__(self, name):
-        self.uuid = str(uuid.uuid4())
-        self.name = name
-        self.birthday = None
-        self.phone_numbers = []
-        self.emails: list[EmailAddress] = []
-        self.addresses = []
-        self.notes = []
-        self.tags = set()
+    def __init__(
+            self,
+            name: str,
+            tags: Optional[List[str]] = None,
+            contact_id: Optional[str] = None
+        ) -> None:
+        self.tag_manager: TagManagerService = TagManagerService()
+        self.id: str = contact_id or str(uuid.uuid4())
+        self.name: str = name
+        self.birthday: Birthday = None
+        self.phone_numbers: List[PhoneNumber] = []
+        self.emails: List[EmailAddress] = []
+        self.addresses: List[Address] = []
+        self.note: Note = None
+
+        if tags is None:
+            self.tags: List[str] = []
+        else:
+            for tag in tags:
+                self.add_tag(tag)
 
     def __str__(self):
-        phone_str = ", ".join([str(phone) for phone in self.phone_numbers])
-        email_str = ", ".join([str(e) for e in self.emails])
-        birthday_info = (
-            f", День народження: {self.birthday}, Вік: {self.birthday.get_age()}"
-            if self.birthday
-            else ""
+        return (
+            f"{self.id:10} {self.name:20} {self.formatted_birthday:20} "
+            f"{to_comma_separated_string(self.phone_numbers):30} "
+            f"{to_comma_separated_string(self.emails):30} "
+            f"{to_comma_separated_string(self.addresses):20} "
+            f"{to_comma_separated_string(self.note):20} "
+            f"{to_comma_separated_string(self.tags):10}"
         )
-        address_str = ", ".join([str(addr) for addr in self.addresses])
-        notes_str = ", ".join([str(note) for note in self.notes])
-        tags_str = ", ".join([str(tag) for tag in self.tags])
 
-        return f"ID контакту: {self.uuid}, Ім'я: {self.name}{birthday_info}, Телефони: {phone_str}, Emails: {email_str}, Адреси: {address_str}, Нотатки: {notes_str}, Теги: {tags_str}. "
-
-    def add_birthday(self, birthday):
+    def formatted_birthday(self, no_date: str = "No Birthday") -> str:
         """
-        Add birthday to the contact
+        Return the formatted birthday of the contact
         """
-        self.birthday = Birthday(birthday)
+        if self.birthday:
+            return f"{self.birthday} ({self.birthday.get_age()})"
+        return no_date
 
-    def is_upcoming_bd(self, days: int):
+    def is_upcoming_bd(self, days: int) -> bool:
         """
         Check if the contact's birthday is upcoming in the next `days` days
         """
@@ -54,7 +70,7 @@ class Contact:
         next_birthday = self.birthday.get_next_birthday(today)
         return next_birthday <= today + timedelta(days=days)
 
-    def congratulations_date(self):
+    def congratulations_date(self) -> Optional[datetime.date]:
         """
         Return the date when the contact's birthday is celebrated
         """
@@ -67,194 +83,124 @@ class Contact:
             next_birthday += timedelta(days=7 - next_birthday.weekday())
         return next_birthday
 
-    def add_phone(self, phone):
+    def add_phone(self, phone: PhoneNumber) -> None:
         """
         Add phone number to the contact
         """
-        try:
-            self.phone_numbers.append(PhoneNumber(phone))
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.phone_numbers.append(phone)
 
-    def add_email(self, email):
+    def add_email(self, email: EmailAddress) -> None:
         """
         Add email address to the contact
         """
-        try:
-            self.emails.append(EmailAddress(email))
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.emails.append(email)
 
-    def add_address(self, address):
+    def add_address(self, address: Address) -> None:
         """
         Add address to the contact
         """
-        try:
-            self.addresses.append(Address(address))
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.addresses.append(address)
 
-    def add_note(self, note):
-        """
-        Add note to the contact
-        """
-        try:
-            self.notes.append(Note(note))
-        except ValueError as e:
-            print(f"Error: {e}")
-
-    def add_tag(self, tag_name):
+    def add_tag(self, tag_name: str) -> None:
         """
         Add tag to the contact
         """
-        try:
-            tag_manager = TagManagerService()
-            tag_manager.add_tag(tag_name, EntityType.CONTACT, self.uuid)
-            self.tags.add(tag_name)
-        except ValueError as e:
-            print(f"Error: {e}")
+        if tag_name not in self.tags:
+            self.tags.append(tag_name)
+            self.tag_manager.add_tag(tag_name, EntityType.CONTACT, self.id)
 
-    def edit_name(self, name):
+    def set_name(self, name: str) -> None:
         """
         Edit the name of the contact
         """
-        try:
-            self.name = name
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.name = name
 
-    def edit_birthday(self, birthday):
+    def set_birthdate(self, birthday: Birthday) -> None:
         """
         Edit the birthday of the contact
         """
-        try:
-            self.birthday = Birthday(birthday)
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.birthday = birthday
 
-    def edit_phone(self, old_phone, new_phone):
+    def edit_phone(self, old_phone: PhoneNumber, new_phone: PhoneNumber) -> None:
         """
         Edit the phone number of the contact
         """
-        try:
-            old_phone = PhoneNumber(old_phone)
-            new_phone = PhoneNumber(new_phone)
-            self.phone_numbers = [
-                phone for phone in self.phone_numbers if phone != old_phone
-            ]
-            self.phone_numbers.append(new_phone)
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.phone_numbers = [
+            phone for phone in self.phone_numbers if phone != old_phone
+        ]
+        self.phone_numbers.append(new_phone)
 
-    def edit_email(self, old_email, new_email):
+    def edit_email(self, old_email: EmailAddress, new_email: EmailAddress) -> None:
         """
         Edit the email address of the contact
         """
-        try:
-            old_email = EmailAddress(old_email)
-            new_email = EmailAddress(new_email)
-            self.emails = [email for email in self.emails if email != old_email]
-            self.emails.append(new_email)
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.emails = [email for email in self.emails if email != old_email]
+        self.emails.append(new_email)
 
-    def edit_address(self, old_address, new_address):
+    def edit_address(self, old_address: Address, new_address: Address) -> None:
         """
         Edit the address of the contact
         """
-        try:
-            old_address = Address(old_address)
-            new_address = Address(new_address)
-            self.addresses = [
-                address for address in self.addresses if address != old_address
-            ]
-            self.addresses.append(new_address)
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.addresses = [
+            address for address in self.addresses if address != old_address
+        ]
+        self.addresses.append(new_address)
 
-    def edit_note(self, old_note, new_note):
+    def set_note(self, note: Note) -> None:
         """
         Edit the note of the contact
         """
-        try:
-            old_note = Note(old_note)
-            new_note = Note(new_note)
-            self.notes = [note for note in self.notes if note != old_note]
-            self.notes.append(Note(new_note))
-        except ValueError as e:
-            print(f"Error: {e}")
 
-    # Removing info
+        self.note = Note(note, self.tag_manager)
 
-    def remove_birthday(self):
-        """
-        Remove the birthday of the contact
-        """
-        try:
-            self.birthday = None
-        except ValueError as e:
-            print(f"Error: {e}")
-
-    def remove_phone(self, phone):
+    def remove_phone(self, phone: PhoneNumber):
         """
         Remove the phone number of the contact
         """
-        try:
-            phone = PhoneNumber(phone)
-            self.phone_numbers = [p for p in self.phone_numbers if p != phone]
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.phone_numbers = [p for p in self.phone_numbers if p != phone]
 
-    def remove_email(self, email):
+    def remove_email(self, email: EmailAddress):
         """
         Remove the email address of the contact
         """
-        try:
-            email = EmailAddress(email)
-            self.emails = [e for e in self.emails if e != email]
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.emails = [e for e in self.emails if e != email]
 
-    def remove_address(self, address):
+    def remove_address(self, address: Address):
         """
         Remove the address of the contact
         """
-        try:
-            address = Address(address)
-            self.addresses = [a for a in self.addresses if a != address]
-        except ValueError as e:
-            print(f"Error: {e}")
-
-    def remove_note(self, note):
-        """
-        Remove the note of the contact
-        """
-        try:
-            note = Note(note)
-            self.notes = [n for n in self.notes if n != note]
-        except ValueError as e:
-            print(f"Error: {e}")
+        self.addresses = [a for a in self.addresses if a != address]
 
     def remove_tag(self, tag_name):
         """
         Remove the tag of the contact
         """
-        try:
-            tag_manager = TagManagerService()
-            tag_manager.remove_tag(tag_name, EntityType.CONTACT, self.uuid)
-            self.tags.discard(tag_name)
-        except ValueError as e:
-            print(f"Error: {e}")
+        tag_manager = TagManagerService()
+        tag_manager.remove_tag(tag_name, EntityType.CONTACT, self.id)
+        self.tags = [tag for tag in self.tags if tag != tag_name]
 
-    def delete_contact(self):
+    def to_dict(self):
         """
-        Delete the contact
+        Return a dictionary representation of the contact
         """
-        for tag_name in self.tags:
-            TagManagerService().remove_tag(tag_name, EntityType.CONTACT, self.uuid)
-        self.birthday = None
-        self.addresses = []
-        self.phone_numbers = []
-        self.notes = []
-        self.emails = []
-        self.tags = set()
+        return {
+            "id": self.id,
+            "name": self.name,
+            "birthday": self.birthday.to_dict() if self.birthday else None,
+            "phone_numbers": [phone.to_dict() for phone in self.phone_numbers],
+            "emails": [email.to_dict() for email in self.emails],
+            "addresses": [address.to_dict() for address in self.addresses],
+            "tags": self.tags
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Create a Contact object from a dictionary
+        """
+        obj = cls(name=data["name"], contact_id=data["id"], tags=data.get("tags"))
+        obj.birthday = Birthday.from_dict(data["birthday"]) if data["birthday"] else None
+        obj.phone_numbers = [PhoneNumber.from_dict(phone) for phone in data["phone_numbers"]]
+        obj.emails = [EmailAddress.from_dict(email) for email in data["emails"]]
+        obj.addresses = [Address.from_dict(address) for address in data["addresses"]]
+        return obj

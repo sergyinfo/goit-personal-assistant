@@ -43,6 +43,7 @@ class Notebook:
         for note_id, note_data in data.items():
             note = Note(
                 text=note_data['text'],
+                
                 tags=note_data['tags'],
                 note_id=note_data['note_id']
             )
