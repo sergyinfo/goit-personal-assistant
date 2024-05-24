@@ -19,27 +19,28 @@ class Contact:
     def __init__(
             self,
             name: str,
+            birthday: Optional[Birthday] = None,
+            note: Optional[Note] = None,
             tags: Optional[List[str]] = None,
             contact_id: Optional[str] = None
         ) -> None:
         self.tag_manager: TagManagerService = TagManagerService()
         self.id: str = contact_id or str(uuid.uuid4())[:8]
         self.name: str = name
-        self.birthday: Birthday = None
+        self.birthday: Birthday = birthday or None
         self.phone_numbers: List[PhoneNumber] = []
         self.emails: List[EmailAddress] = []
         self.addresses: List[Address] = []
-        self.note: Note = None
+        self.note: Note = note or None
+        self.tags: List[str] = []
 
-        if tags is None:
-            self.tags: List[str] = []
-        else:
+        if tags is not None:
             for tag in tags:
                 self.add_tag(tag)
 
     def __str__(self):
         return (
-            f"{self.id:10} {self.name:20} {self.formatted_birthday:20} "
+            f"{self.id:10} {self.name:20} {self.formatted_birthday():20}"
             f"{to_comma_separated_string(self.phone_numbers):30} "
             f"{to_comma_separated_string(self.emails):30} "
             f"{to_comma_separated_string(self.addresses):20} "
@@ -111,7 +112,7 @@ class Contact:
         """
         self.name = name
 
-    def set_birthdate(self, birthday: Birthday) -> None:
+    def set_birthday(self, birthday: Birthday) -> None:
         """
         Edit the birthday of the contact
         """
@@ -146,8 +147,7 @@ class Contact:
         """
         Edit the note of the contact
         """
-
-        self.note = Note(note, self.tag_manager)
+        self.note = note
 
     def remove_phone(self, phone: PhoneNumber):
         """
@@ -186,7 +186,8 @@ class Contact:
             "phone_numbers": [phone.to_dict() for phone in self.phone_numbers],
             "emails": [email.to_dict() for email in self.emails],
             "addresses": [address.to_dict() for address in self.addresses],
-            "tags": self.tags
+            "tags": self.tags,
+            "note": self.note.to_dict() if self.note else ""
         }
 
     @classmethod

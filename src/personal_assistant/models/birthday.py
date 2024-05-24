@@ -15,11 +15,14 @@ class Birthday:
     """
     def __init__(self, date_input):
         if isinstance(date_input, str):
-            self.date = datetime.strptime(date_input, "%d.%m.%Y").date()
+            try:
+                self.date = datetime.strptime(date_input, "%d.%m.%Y").date()
+            except ValueError:
+                raise ValueError("Дата народження має бути у форматі ДД.ММ.РРРР і має бути валідною датою")
         elif isinstance(date_input, date):
             self.date = date_input
         else:
-            raise ValueError("Дата народження має бути строкою у форматі ДД.ММ.РРРР чи об'єкт datetime.date")
+            raise ValueError("Дата народження має бути строкою у форматі ДД.ММ.РРРР чи об'єктом datetime.date")
         self.validate()
 
     def validate(self):
@@ -63,14 +66,14 @@ class Birthday:
         """
         Convert the birthday to a dictionary
         """
-        return {"date": self.date.strftime("%d.%m.%Y")}
+        return self.date.strftime("%d.%m.%Y")
 
     @classmethod
     def from_dict(cls, data):
         """
         Create a new Birthday object from a dictionary
         """
-        return cls(date_input=data["date"])
+        return cls(date_input=data)
 
     def __str__(self):
         return self.date.strftime("%d.%m.%Y")

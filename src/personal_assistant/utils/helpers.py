@@ -32,4 +32,7 @@ def to_comma_separated_string(items):
     """
     Convert a list of items to a comma-separated string.
     """
+    if not items:
+        return ""
+
     return ", ".join(str(item) for item in items)
