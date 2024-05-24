@@ -4,6 +4,8 @@ Module for contact commands
 import argparse
 from personal_assistant.enums.command_types import Command
 from personal_assistant.models.contact import Contact
+from personal_assistant.models.note import Note
+from personal_assistant.models.birthday import Birthday
 from personal_assistant.services import AddressBook, StorageService
 from personal_assistant.services.storage.json_storage import JsonStorage
 from personal_assistant.utils.decorators import input_error
@@ -16,9 +18,9 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
         dest='contact_command', help='Команди для керування контактами'
     )
 
-    # Contact add
-    add_parser = subparsers.add_parser(Command.LIST.value, help='Показати всі контакти')
-    add_parser.set_defaults(func=contact_list)
+    # Contact list
+    list_parser = subparsers.add_parser(Command.LIST.value, help='Показати всі контакти')
+    list_parser.set_defaults(func=contact_list)
 
     # Contact add
     add_parser = subparsers.add_parser(Command.ADD.value, help='Додати контакт')
@@ -114,7 +116,16 @@ def add_contact(args: argparse.Namespace) -> None:
     """
     Add a new contact to the address book
     """
-    contact = Contact(args.name, args.birthday, args.note)
+
+    birthday = None
+    if args.birthday is not None:
+        birthday = Birthday(args.birthday)
+
+    note = None
+    if args.note is not None:
+        note = Note(args.note, address_book.tag_manager)
+
+    contact = Contact(args.name, birthday, note)
     address_book.set_contact(contact)
     print(f"Контакт {args.name} успішно додано з ID {contact.id}")
     address_book.save()

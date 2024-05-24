@@ -15,11 +15,14 @@ class Birthday:
     """
     def __init__(self, date_input):
         if isinstance(date_input, str):
-            self.date = datetime.strptime(date_input, "%d.%m.%Y").date()
+            try:
+                self.date = datetime.strptime(date_input, "%d.%m.%Y").date()
+            except ValueError:
+                raise ValueError("Дата народження має бути у форматі ДД.ММ.РРРР і має бути валідною датою")
         elif isinstance(date_input, date):
             self.date = date_input
         else:
-            raise ValueError("Дата народження має бути строкою у форматі ДД.ММ.РРРР чи об'єкт datetime.date")
+            raise ValueError("Дата народження має бути строкою у форматі ДД.ММ.РРРР чи об'єктом datetime.date")
         self.validate()
 
     def validate(self):

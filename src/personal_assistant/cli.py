@@ -3,8 +3,8 @@ This module is the cli module for the personal assistant application.
 It parses the command line arguments and calls the appropriate functions 
 based on the command and entity types.
 """
+import shlex
 from prompt_toolkit import PromptSession
-from prompt_toolkit.completion import WordCompleter
 from personal_assistant.services.cli_completer import CommandCompleter
 from personal_assistant.utils.helpers import get_commands
 from personal_assistant.utils.cli_setup import (
@@ -44,8 +44,8 @@ def main() -> None:
 
                 # Show the help text each time the user enters any command
                 hello_screen(parsers)
-
-                args = parser.parse_args(user_input.split())
+                parsed_input = shlex.split(user_input)
+                args = parser.parse_args(parsed_input)
                 handle_command(args)
             except SystemExit:
                 # argparse will call sys.exit() on error

@@ -19,17 +19,19 @@ class Contact:
     def __init__(
             self,
             name: str,
+            birthday: Optional[Birthday] = None,
+            note: Optional[Note] = None,
             tags: Optional[List[str]] = None,
             contact_id: Optional[str] = None
         ) -> None:
         self.tag_manager: TagManagerService = TagManagerService()
         self.id: str = contact_id or str(uuid.uuid4())[:8]
         self.name: str = name
-        self.birthday: Birthday = None
+        self.birthday: Birthday = birthday or None
         self.phone_numbers: List[PhoneNumber] = []
         self.emails: List[EmailAddress] = []
         self.addresses: List[Address] = []
-        self.note: Note = None
+        self.note: Note = note or None
         self.tags: List[str] = []
 
         if tags is not None:
