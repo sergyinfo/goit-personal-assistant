@@ -30,16 +30,15 @@ class Contact:
         self.emails: List[EmailAddress] = []
         self.addresses: List[Address] = []
         self.note: Note = None
+        self.tags: List[str] = []
 
-        if tags is None:
-            self.tags: List[str] = []
-        else:
+        if tags is not None:
             for tag in tags:
                 self.add_tag(tag)
 
     def __str__(self):
         return (
-            f"{self.id:10} {self.name:20} {self.formatted_birthday:20} "
+            f"{self.id:10} {self.name:20} {self.formatted_birthday():20}"
             f"{to_comma_separated_string(self.phone_numbers):30} "
             f"{to_comma_separated_string(self.emails):30} "
             f"{to_comma_separated_string(self.addresses):20} "

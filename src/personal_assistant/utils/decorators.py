@@ -16,7 +16,7 @@ def input_error(func: callable) -> callable:
         try:
             return func(*args, **kwargs)
         except ValueError as e:
-            return f"Error: {str(e)}"
+            print(f"Error: {str(e)}")
         except Exception as e:
-            return f"An error occurred: {str(e)}"
+            print(f"An error occurred: {str(e)}")
     return inner

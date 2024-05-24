@@ -2,6 +2,7 @@
 A module that contains the AddressBook class, which is responsible for managing contacts and tags.
 """
 from typing import Dict, List
+from tabulate import tabulate
 from personal_assistant.models.contact import Contact
 from personal_assistant.services import StorageService
 from personal_assistant.services import TagManagerService
@@ -79,5 +80,34 @@ class AddressBook:
         data = self.storage_service.load_data("contacts_data")
         self.contacts = {contact_id: Contact.from_dict(contact_data) for contact_id, contact_data in data.items()}
 
+    def print_contacts_table(self):
+        """
+        Print a table with all the contacts in the address book.
+        """
+        # Gather data from all contacts
+        contacts_data = [contact.to_dict() for contact in self.contacts.values()]
+
+        # Custom header mapping to the keys from the contact dictionaries
+        headers = {
+            "id": "ID",
+            "name": "Ім'я",
+            "birthday": "Дата народження",
+            "phone_numbers": "Телефони",
+            "emails": "Email",
+            "addresses": "Адреси",
+            "note": "Примітка",
+            "tags": "Теги"
+        }
+
+        # Reorder or alter data according to custom headers
+        reformatted_data = [
+            {headers[key]: value for key, value in contact.items() if key in headers}
+            for contact in contacts_data
+        ]
+
+        # Use tabulate to print the table with headers specified in the desired order
+        print(tabulate(reformatted_data, headers="keys", tablefmt="grid"))
+
     def __str__(self):
         return '\n'.join(str(contact) for contact in self.contacts.values())
+

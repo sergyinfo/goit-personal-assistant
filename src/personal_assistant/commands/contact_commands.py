@@ -17,6 +17,10 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     )
 
     # Contact add
+    add_parser = subparsers.add_parser(Command.LIST.value, help='Показати всі контакти')
+    add_parser.set_defaults(func=contact_list)
+
+    # Contact add
     add_parser = subparsers.add_parser(Command.ADD.value, help='Додати контакт')
     add_parser.add_argument('--name', required=True, help='Ім\'я контакту')
     add_parser.add_argument('--birthday', help='Дата народження')
@@ -97,6 +101,13 @@ except FileNotFoundError:
     print("No address book found. Creating a new one.")
 except Exception as e:
     print(f"An error occurred while loading the address book: {e}")
+
+@input_error
+def contact_list(args: argparse.Namespace) -> None:
+    """
+    List all contacts in the address book
+    """
+    address_book.print_contacts_table()
 
 @input_error
 def add_contact(args: argparse.Namespace) -> None:

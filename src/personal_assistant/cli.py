@@ -4,6 +4,7 @@ It parses the command line arguments and calls the appropriate functions
 based on the command and entity types.
 """
 from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter
 from personal_assistant.services.cli_completer import CommandCompleter
 from personal_assistant.utils.helpers import get_commands
 from personal_assistant.utils.cli_setup import (
