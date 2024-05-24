@@ -3,6 +3,10 @@ Module for contact commands
 """
 import argparse
 from personal_assistant.enums.command_types import Command
+from personal_assistant.models.contact import Contact
+from personal_assistant.services import AddressBook, StorageService
+from personal_assistant.services.storage.json_storage import JsonStorage
+from personal_assistant.utils.decorators import input_error
 
 def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     """
@@ -15,6 +19,8 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     # Contact add
     add_parser = subparsers.add_parser(Command.ADD.value, help='Додати контакт')
     add_parser.add_argument('--name', required=True, help='Ім\'я контакту')
+    add_parser.add_argument('--birthday', help='Дата народження')
+    add_parser.add_argument('--note', help='Примітка')
     add_parser.set_defaults(func=add_contact)
 
     # Contact edit
@@ -83,9 +89,25 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     delete_tag_parser.add_argument('--tag', required=True, help='Тег для видалення')
     delete_tag_parser.set_defaults(func=delete_tag_from_contact)
 
+storage_service = StorageService(JsonStorage())
+address_book = AddressBook(storage_service)
+try:
+    address_book.load()
+except FileNotFoundError:
+    print("No address book found. Creating a new one.")
+except Exception as e:
+    print(f"An error occurred while loading the address book: {e}")
+
+@input_error
 def add_contact(args: argparse.Namespace) -> None:
-    print(f"Adding contact: {args.name}")
-    pass
+    """
+    Add a new contact to the address book
+    """
+    contact = Contact(args.name, args.birthday, args.note)
+    address_book.set_contact(contact)
+    print(f"Контакт {args.name} успішно додано з ID {contact.id}")
+    address_book.save()
+
 
 def edit_contact(args: argparse.Namespace) -> None:
     print(f"Editing contact {args.id} to new name {args.name if args.name else 'not provided'}")

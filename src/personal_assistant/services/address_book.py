@@ -2,7 +2,7 @@
 A module that contains the AddressBook class, which is responsible for managing contacts and tags.
 """
 from typing import Dict, List
-from personal_assistant.models import Contact
+from personal_assistant.models.contact import Contact
 from personal_assistant.services import StorageService
 from personal_assistant.services import TagManagerService
 from personal_assistant.enums import EntityType

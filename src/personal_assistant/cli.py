@@ -21,7 +21,7 @@ def main() -> None:
     """
 
     # Clear the screen and setup the parsers for autocomplete
-    clear_screen()
+    #clear_screen()
     parser, parsers = setup_parsers()
     commands = get_commands(parsers)
 
