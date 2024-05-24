@@ -3,6 +3,7 @@ Module for setting up the command line interface
 """
 import os
 import platform
+import shutil
 from typing import Dict, Tuple
 import argparse
 from tabulate import tabulate
@@ -49,14 +50,15 @@ def handle_command(args: argparse.Namespace) -> None:
 def get_terminal_size() -> Tuple[int, int]:
     """
     Get the terminal size.
+    Returns:
+        Tuple[int, int]: A tuple containing the number of rows and columns of the terminal.
     """
     try:
-        # Use shutil for cross-platform compatibility
         columns, rows = shutil.get_terminal_size(fallback=(80, 24))
     except Exception as e:
-        # Fallback if everything fails
-        columns, rows = (80, 24)
-    return rows, columns
+        print(f"Failed to get terminal size: {e}")
+        columns, rows = (80, 24)  # Fallback if there's an error
+    return rows, columns 
 
 def print_centered(text, term_width, color) -> None:
     """
