@@ -26,6 +26,9 @@ class Notebook:
 
     def find_note_by_id(self, note_id: str) -> Optional[Note]:
         return self.notes.get(note_id)
+    
+    def find_note_by_content(self, content: str) -> List[Note]:
+        return [note for note in self.notes.values() if content in note.text]
 
     def find_notes_by_tag(self, tag: str) -> List[Note]:
         note_ids = self.tag_manager.search_by_tag(tag).get(EntityType.NOTE, [])
