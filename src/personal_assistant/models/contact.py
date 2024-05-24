@@ -112,7 +112,7 @@ class Contact:
         """
         self.name = name
 
-    def set_birthdate(self, birthday: Birthday) -> None:
+    def set_birthday(self, birthday: Birthday) -> None:
         """
         Edit the birthday of the contact
         """
@@ -147,8 +147,7 @@ class Contact:
         """
         Edit the note of the contact
         """
-
-        self.note = Note(note, self.tag_manager)
+        self.note = note
 
     def remove_phone(self, phone: PhoneNumber):
         """
@@ -187,7 +186,8 @@ class Contact:
             "phone_numbers": [phone.to_dict() for phone in self.phone_numbers],
             "emails": [email.to_dict() for email in self.emails],
             "addresses": [address.to_dict() for address in self.addresses],
-            "tags": self.tags
+            "tags": self.tags,
+            "note": self.note.to_dict() if self.note else ""
         }
 
     @classmethod

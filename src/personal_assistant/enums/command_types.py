@@ -16,9 +16,12 @@ class Command(Enum):
     DELETE_PHONE = "delete_phone"
     ADD_EMAIL = "add_email"
     DELETE_EMAIL = "delete_email"
+    ADD_ADDRESS = "add_address"
+    DELETE_ADDRESS = "delete_address"
     UPCOMING_BIRTHDAY = "upcoming_birthday"
     ADD_TAG = "add_tag"
     DELETE_TAG = "delete_tag"
+    ANIVERSARIES = "aniversaries"
 
 class Entity(Enum):
     """

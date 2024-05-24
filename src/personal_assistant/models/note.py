@@ -83,6 +83,12 @@ class Note:
         Get the history of the note
         """
         return self.note_history
+    
+    def to_dict(self) -> dict:
+        """
+        Return a dictionary representation of the note
+        """
+        return self.text
 
     def __str__(self) -> str:
         return (f"Note(id={self.note_id}, text={self.text}, created_at={self.created_at}, "

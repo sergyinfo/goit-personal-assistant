@@ -4,8 +4,7 @@ Module for contact commands
 import argparse
 from personal_assistant.enums.command_types import Command
 from personal_assistant.models.contact import Contact
-from personal_assistant.models.note import Note
-from personal_assistant.models.birthday import Birthday
+from personal_assistant.models import PhoneNumber, Birthday, Note, EmailAddress, Address
 from personal_assistant.services import AddressBook, StorageService
 from personal_assistant.services.storage.secure_json_storage import SecureJsonStorage
 from personal_assistant.utils.decorators import input_error
@@ -32,7 +31,7 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     # Contact edit
     edit_parser = subparsers.add_parser(Command.EDIT.value, help='Редагувати контакт')
     edit_parser.add_argument('--id', required=True, help='ID контакта для редагування')
-    edit_parser.add_argument('--name', required=True, help='Ім\'я контакту')
+    edit_parser.add_argument('--name', help='Ім\'я контакту')
     edit_parser.add_argument('--birthday', help='Дата народження')
     edit_parser.add_argument('--note', help='Примітка')
     edit_parser.set_defaults(func=edit_contact)
@@ -44,9 +43,8 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
 
     # Contact search
     search_parser = subparsers.add_parser(Command.SEARCH.value, help='Пошук контактів')
-    search_parser.add_argument('--name', help='Ім\'я для пошуку')
-    search_parser.add_argument('--email', help='Email для фільтрації')
-    search_parser.add_argument('--phone', help='Телефонний номер для фільтрації')
+    search_parser.add_argument('--q', required=True, help='Фраза для пошуку')
+    search_parser.add_argument('--by', help='Поле для пошуку (name, email, phone, address, tag, birthday, any)')
     search_parser.set_defaults(func=search_contacts)
 
     # Phone add
@@ -81,6 +79,22 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     delete_email_parser.add_argument('--email', required=True, help='Електронна адреса')
     delete_email_parser.set_defaults(func=delete_email)
 
+    # Address add
+    add_address_parser = subparsers.add_parser(
+        Command.ADD_ADDRESS.value, help='Додати адресу'
+    )
+    add_address_parser.add_argument('--id', required=True, help='ID контакта')
+    add_address_parser.add_argument('--address', required=True, help='Адреса')
+    add_address_parser.set_defaults(func=add_address)
+
+    # Address remove
+    delete_address_parser = subparsers.add_parser(
+        Command.DELETE_ADDRESS.value, help='Видалити адресу'
+    )
+    delete_address_parser.add_argument('--id', required=True, help='ID контакта')
+    delete_address_parser.add_argument('--address', required=True, help='Адреса')
+    delete_address_parser.set_defaults(func=delete_address)
+
     # Tag add
     add_tag_parser = subparsers.add_parser(
         Command.ADD_TAG.value, help='Додати тег до контакта'
@@ -96,6 +110,13 @@ def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     delete_tag_parser.add_argument('--id', required=True, help='ID контакта')
     delete_tag_parser.add_argument('--tag', required=True, help='Тег для видалення')
     delete_tag_parser.set_defaults(func=delete_tag_from_contact)
+
+    # Closest aniversary
+    aniversaries_parser = subparsers.add_parser(
+        Command.ANIVERSARIES.value, help='Показати наближені дні народження'
+    )
+    aniversaries_parser.add_argument('--days', help='Період в днях (7 за замовчуванням)')
+    aniversaries_parser.set_defaults(func=congratulations_date)
 
 storage_service = StorageService(SecureJsonStorage())
 address_book = AddressBook(storage_service)
@@ -138,6 +159,10 @@ def edit_contact(args: argparse.Namespace) -> None:
     """
     Edit an existing contact in the address book
     """
+    if not args.name and not args.birthday and not args.note:
+        print("Не вказано жодного параметру для редагування")
+        return
+
     contact = address_book.get_contact(args.id)
     if not contact:
         print(f"Контакт з ID {args.id} не знайдено")
@@ -147,7 +172,7 @@ def edit_contact(args: argparse.Namespace) -> None:
         contact.set_name(args.name)
 
     if args.birthday is not None:
-        contact.set_birthdate(Birthday(args.birthday))
+        contact.set_birthday(Birthday(args.birthday))
 
     if args.note is not None:
         contact.set_note(Note(args.note, address_book.tag_manager))
@@ -172,10 +197,9 @@ def search_contacts(args: argparse.Namespace) -> None:
     """
     Search for contacts in the address book
     """
-    results = address_book.find(args.name or "")
+    results = address_book.find(args.q, args.by or 'any')
     if results:
-        for contact in results:
-            print(contact)
+        address_book.print_contacts_table(results)
     else:
         print("Контакти не знайдено")
 
@@ -190,7 +214,8 @@ def add_phone(args: argparse.Namespace) -> None:
         print(f"Контакт з ID {args.id} не знайдено")
         return
 
-    contact.add_phone(args.phone)
+    phone = PhoneNumber(args.phone)
+    contact.add_phone(phone)
     address_book.set_contact(contact)
     print(f"Телефонний номер {args.phone} успішно додано до контакту {args.id}")
     address_book.save()
@@ -205,8 +230,8 @@ def delete_phone(args: argparse.Namespace) -> None:
     if not contact:
         print(f"Контакт з ID {args.id} не знайдено")
         return
-
-    contact.remove_phone(args.phone)
+    phone = PhoneNumber(args.phone)
+    contact.remove_phone(phone)
     address_book.set_contact(contact)
     print(f"Телефонний номер {args.phone} успішно видалено з контакту {args.id}")
     address_book.save()
@@ -222,7 +247,8 @@ def add_email(args: argparse.Namespace) -> None:
         print(f"Контакт з ID {args.id} не знайдено")
         return
 
-    contact.add_email(args.email)
+    email = EmailAddress(args.email)
+    contact.add_email(email)
     address_book.set_contact(contact)
     print(f"Електронну адресу {args.email} успішно додано до контакту {args.id}")
     address_book.save()
@@ -238,7 +264,8 @@ def delete_email(args: argparse.Namespace) -> None:
         print(f"Контакт з ID {args.id} не знайдено")
         return
 
-    contact.remove_email(args.email)
+    email = EmailAddress(args.email)
+    contact.remove_email(email)
     address_book.set_contact(contact)
     print(f"Електронну адресу {args.email} успішно видалено з контакту {args.id}")
     address_book.save()
@@ -285,14 +312,15 @@ def add_address(args: argparse.Namespace) -> None:
         print(f"Контакт з ID {args.id} не знайдено")
         return
 
-    contact.add_address(args.address)
+    address = Address(args.address)
+    contact.add_address(address)
     address_book.set_contact(contact)
     print(f"Адреса {args.address} успішно додано до контакту {args.id}")
     address_book.save()
 
 
 @input_error
-def remove_address(args: argparse.Namespace) -> None:
+def delete_address(args: argparse.Namespace) -> None:
     """
     Remove an address from an existing contact
     """
@@ -301,7 +329,8 @@ def remove_address(args: argparse.Namespace) -> None:
         print(f"Контакт з ID {args.id} не знайдено")
         return
 
-    contact.remove_address(args.address)
+    address = Address(args.address)
+    contact.remove_address(address)
     address_book.set_contact(contact)
     print(f"Адреса {args.address} успішно видалено з контакту {args.id}")
     address_book.save()
@@ -312,10 +341,5 @@ def congratulations_date(args: argparse.Namespace) -> None:
     """
     List contacts with birthdays in a given number of days from today
     """
-    days = int(args.days)
-    contacts = address_book.congratulations_date(days)
-    if contacts:
-        for contact in contacts:
-            print(contact)
-    else:
-        print("Немає контактів з днями народження у вказаний період")
+    days = int(args.days) if args.days else 7
+    address_book.print_aniversaries_table(days)
