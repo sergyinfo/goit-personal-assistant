@@ -19,6 +19,11 @@ class Command(Enum):
     UPCOMING_BIRTHDAY = "upcoming_birthday"
     ADD_TAG = "add_tag"
     DELETE_TAG = "delete_tag"
+    ARCHIVE = "archive"
+    RESTORE = "restore"
+    VIEW_ACTIVE = "view_active"
+    VIEW_ARCHIVED = "view_archived"
+    VIEW_HISTORY = "view_history"
 
 class Entity(Enum):
     """
