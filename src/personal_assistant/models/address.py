@@ -1,11 +1,15 @@
 
 """
-This is the Address class for the personal assistant application. It parses the address string arguments, 
-validates the data from the user, and returns the address.
+This is the Address class for the personal assistant application. 
+It parses the address string arguments, validates the data from the user, 
+and returns the address.
 """
 import re
-from typing import Optional 
+from typing import Optional
 class Address:
+    """
+    Address class to parse and validate address fields.
+    """
     def __init__(self, address_str: str) -> None:
         self.street: Optional[str] = None
         self.house_number: Optional[str] = None
@@ -18,6 +22,9 @@ class Address:
         self.validate()
 
     def parse_address(self, address_str):
+        """
+        Parse the address string into address fields.
+        """
         parts = address_str.split(',')
         if len(parts) > 0:
             self.street = parts[0].strip()
@@ -43,18 +50,32 @@ class Address:
             if re.match(r'^\d+$', potential_postal_code):
                 self.postal_code = potential_postal_code
             else:
-                 raise ValueError("Недійсний поштовий індекс: має містити лише цифри.")
+                raise ValueError("Недійсний поштовий індекс: має містити лише цифри.")
         if len(parts) > 6:
             self.country = parts[6].strip()
 
     def validate(self):
+        """
+        Validate the address fields.
+        """
         if not self.street or not self.house_number:
             raise ValueError(f"Вулиця та номер будинку є обов'язковими полями адреси. {Address.get_input_format()}")
 
     @staticmethod
     def get_input_format():
+        """
+        Get the input format for the address.
+        """
         return "Введіть адресу в форматі: вулиця, номер будинку, [номер квартири,] [місто,] [штат,] [поштовий індекс,] [країна]."
 
     def __str__(self):
-        parts = [self.street, self.house_number, self.apartment_number, self.city, self.state, self.postal_code, self.country]
+        parts = [
+            self.street, 
+            self.house_number, 
+            self.apartment_number, 
+            self.city, 
+            self.state, 
+            self.postal_code, 
+            self.country
+        ]
         return ", ".join(filter(None, parts))

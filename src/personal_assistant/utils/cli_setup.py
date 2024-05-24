@@ -3,7 +3,7 @@ Module for setting up the command line interface
 """
 import os
 import platform
-from typing import Dict
+from typing import Dict, Tuple
 import argparse
 from tabulate import tabulate
 from colorama import init, Fore, Back
@@ -13,8 +13,7 @@ from personal_assistant.commands.note_commands import handle_note_commands
 
 init(autoreset=True)
 
-
-def setup_parsers() -> tuple:
+def setup_parsers() -> Tuple[argparse.ArgumentParser, Dict[str, argparse.ArgumentParser]]:
     """
     Setup the command line parsers.
     """
@@ -37,7 +36,6 @@ def setup_parsers() -> tuple:
 
     return parser, parsers
 
-
 def handle_command(args: argparse.Namespace) -> None:
     """
     Handle the command based on the command and entity types.
@@ -48,12 +46,17 @@ def handle_command(args: argparse.Namespace) -> None:
         # Handle unknown command or show help
         print("Unknown command. Use 'help' to see available commands.")
 
-def get_terminal_size() -> tuple[int, int]:
+def get_terminal_size() -> Tuple[int, int]:
     """
     Get the terminal size.
     """
-    rows, columns = os.popen('stty size', 'r').read().split()
-    return int(rows), int(columns)
+    try:
+        # Use shutil for cross-platform compatibility
+        columns, rows = shutil.get_terminal_size(fallback=(80, 24))
+    except Exception as e:
+        # Fallback if everything fails
+        columns, rows = (80, 24)
+    return rows, columns
 
 def print_centered(text, term_width, color) -> None:
     """
@@ -64,12 +67,10 @@ def print_centered(text, term_width, color) -> None:
         # Align text to the center
         print(color + line.center(term_width))
 
-
 def clear_screen() -> None:
     """
     Clear the terminal screen.
     """
-
     os_name = platform.system().lower()
     if 'windows' in os_name:
         os.system('cls')
@@ -82,23 +83,20 @@ def hello_screen(parsers: Dict[str, argparse.ArgumentParser]) -> None:
     """
     _, term_width = get_terminal_size()
 
-    figlet = Figlet(font='slant', width=term_width)
+    # figlet = Figlet(font='starwars', width=term_width)
+    figlet = Figlet(font='larry3d', width=term_width)
     welcome_text1 = figlet.renderText('Welcome To')
     welcome_text2 = figlet.renderText('BRO Assistant')
 
-    print_centered(welcome_text1, term_width, Fore.BLACK + Back.YELLOW)
-    print_centered(welcome_text2, term_width, Fore.WHITE + Back.BLUE)
+    print_centered(welcome_text1, term_width, Fore.WHITE + Back.BLUE)
+    print_centered(welcome_text2, term_width, Fore.BLACK + Back.YELLOW)
     print("\n")
 
     headers = ["Команда", "Опис", "Параметри"]
     all_rows = []
 
     for name, subparser in parsers.items():
-        if subparser.description:
-            description = subparser.description
-        else:
-            description = "Немає доступного опису для цієї команди."
-
+        description = subparser.description or "Немає доступного опису для цієї команди."
         command_options = []
         for action in subparser._actions:
             if isinstance(action, argparse._SubParsersAction):
@@ -118,4 +116,3 @@ def hello_screen(parsers: Dict[str, argparse.ArgumentParser]) -> None:
     for line in table_lines:
         print(line.center(term_width))
     print("\n")
-
