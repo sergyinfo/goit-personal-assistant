@@ -116,18 +116,32 @@ def search_notes(args: argparse.Namespace) -> None:
     """Search notes by content or tag or ID"""
     content = ' '.join(args.content) if args.content else None
     tag = args.tag if args.tag else None
-    id = args.id if args.id else None
+    note_id = args.id if args.id else None
     print(f"Searching notes... Content: {content}, Tag: {tag}, ID: {id}")
+    
+    notes = []
     if content:
         notes = notebook.find_note_by_content(content)
     elif tag:
         notes = notebook.find_notes_by_tag(tag)
-    elif id:
-        notes = notebook.find_note_by_id(id)
+    elif note_id:
+        note = notebook.find_note_by_id(note_id)
+        notes = [note] if note else []
+
+    if len(notes):
+        print("Found notes:")
+        table = [[note.note_id, note.text, note.created_at, note.updated_at, note.tags, note.is_archived] for note in notes]
+        headers = [
+            f"{Fore.YELLOW}ID{Style.RESET_ALL}", 
+            f"{Fore.BLUE}Text{Style.RESET_ALL}", 
+            f"{Fore.BLUE}Created At{Style.RESET_ALL}", 
+            f"{Fore.BLUE}Updated At{Style.RESET_ALL}", 
+            f"{Fore.YELLOW}Tags{Style.RESET_ALL}", 
+            f"{Fore.RED}Archived{Style.RESET_ALL}"
+        ]
+        print(tabulate(table, headers=headers, tablefmt="grid"))
     else:
-        notes = []
-    for note in notes:
-        print(note)
+        print("No notes found by your request.")
 
 @input_error
 def add_tag_to_note(args: argparse.Namespace) -> None:
