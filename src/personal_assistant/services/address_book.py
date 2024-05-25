@@ -96,7 +96,7 @@ class AddressBook:
             contacts = self.contacts.values()
 
         # Gather data from all contacts
-        contacts_data = [contact.to_dict() for contact in contacts]
+        contacts_data = [contact.to_dict(True) for contact in contacts]
 
         if headers is None:
             headers = {

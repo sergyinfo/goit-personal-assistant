@@ -175,7 +175,7 @@ class Contact:
         tag_manager.remove_tag(tag_name, EntityType.CONTACT, self.id)
         self.tags = [tag for tag in self.tags if tag != tag_name]
 
-    def to_dict(self):
+    def to_dict(self, stringify: bool = False):
         """
         Return a dictionary representation of the contact
         """
@@ -185,9 +185,9 @@ class Contact:
             "birthday": self.birthday.to_dict() if self.birthday else None,
             "phone_numbers": [phone.to_dict() for phone in self.phone_numbers],
             "emails": [email.to_dict() for email in self.emails],
-            "addresses": [address.to_dict() for address in self.addresses],
+            "addresses": [address.to_dict() if not stringify else address.to_dict(stringify) for address in self.addresses],
             "tags": self.tags,
-            "note": self.note.to_dict() if self.note else ""
+            "note": self.note.to_dict(stringify) if self.note else None
         }
 
     @classmethod
@@ -195,7 +195,9 @@ class Contact:
         """
         Create a Contact object from a dictionary
         """
+        tag_manager = TagManagerService()
         obj = cls(name=data["name"], contact_id=data["id"], tags=data.get("tags"))
+        obj.note = Note.from_dict(data["note"], tag_manager) if data["note"] else None
         obj.birthday = Birthday.from_dict(data["birthday"]) if data["birthday"] else None
         obj.phone_numbers = [PhoneNumber.from_dict(phone) for phone in data["phone_numbers"]]
         obj.emails = [EmailAddress.from_dict(email) for email in data["emails"]]

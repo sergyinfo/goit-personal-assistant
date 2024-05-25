@@ -28,6 +28,22 @@ class Command(Enum):
     VIEW_ARCHIVED = "view_archived"
     VIEW_HISTORY = "view_history"
 
+class Argument(Enum):
+    """
+    Enum class for argument types
+    """
+    ID = "id"
+    NAME = "name"
+    BIRTHDAY = "birthday"
+    NOTE = "note"
+    QUERY = "q"
+    BY = "by"
+    PHONE = "phone"
+    EMAIL = "email"
+    ADDRESS = "address"
+    TAG = "tag"
+    DAYS = "days"
+
 class Entity(Enum):
     """
     Enum class for entity types as a top level commands
