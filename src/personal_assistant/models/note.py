@@ -84,10 +84,13 @@ class Note:
         """
         return self.note_history
 
-    def to_dict(self):
+    def to_dict(self, stringify: bool = False):
         """
         Return a dictionary representation of the note
         """
+        if stringify:
+            return self.text
+
         return {
             "note_id": self.note_id,
             "text": self.text,

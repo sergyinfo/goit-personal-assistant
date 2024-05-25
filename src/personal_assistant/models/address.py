@@ -68,10 +68,14 @@ class Address:
         """
         return "Введіть адресу в форматі: вулиця, номер будинку, [номер квартири,] [місто,] [штат,] [поштовий індекс,] [країна]."
 
-    def to_dict(self):
+    def to_dict(self, stringify: bool = False):
         """
         Convert the address to a dictionary
         """
+
+        if stringify:
+            return str(self)
+
         return {
             "street": self.street,
             "house_number": self.house_number,
@@ -87,15 +91,24 @@ class Address:
         """
         Create a new Address object from a dictionary
         """
-        address = cls("")
-        address.street = data["street"]
-        address.house_number = data["house_number"]
-        address.apartment_number = data["apartment_number"]
-        address.city = data["city"]
-        address.state = data["state"]
-        address.postal_code = data["postal_code"]
-        address.country = data["country"]
-        return address
+        parts = [
+            data["street"],
+            data["house_number"],
+            data["apartment_number"],
+            data["city"],
+            data["state"],
+            data["postal_code"],
+            data["country"]
+        ]
+        return Address(", ".join(filter(None, parts)))
+
+    def __eq__(self, value: object) -> bool:
+        """
+        Check if the address is equal to another address.
+        """
+        if not isinstance(value, Address):
+            return False
+        return str(self) == str(value)
 
     def __str__(self):
         parts = [
