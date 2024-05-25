@@ -2,7 +2,7 @@
 Module for contact commands
 """
 import argparse
-from personal_assistant.enums.command_types import Command, Argument, HelpText, Messages
+from personal_assistant.enums.military_command_types import Command, Argument, HelpText, Messages
 from personal_assistant.models.contact import Contact
 from personal_assistant.models import PhoneNumber, Birthday, Note, EmailAddress, Address
 from personal_assistant.services import AddressBook, StorageService

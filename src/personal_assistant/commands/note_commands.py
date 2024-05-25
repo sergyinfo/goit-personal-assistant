@@ -4,7 +4,7 @@ Functionality for note commands
 import argparse
 from tabulate import tabulate
 from colorama import Fore, Style
-from personal_assistant.enums.command_types import Command, Argument, HelpText, Messages
+from personal_assistant.enums.military_command_types import Command, Argument, HelpText, Messages
 from personal_assistant.models.note import Note
 from personal_assistant.services.notebook import Notebook
 from personal_assistant.services.storage.secure_json_storage import SecureJsonStorage

@@ -11,7 +11,7 @@ from colorama import init, Fore, Back
 from pyfiglet import Figlet
 from personal_assistant.commands.contact_commands import handle_contact_commands
 from personal_assistant.commands.note_commands import handle_note_commands
-from personal_assistant.enums.command_types import Entity
+from personal_assistant.enums.military_command_types import Entity
 
 init(autoreset=True)
 
