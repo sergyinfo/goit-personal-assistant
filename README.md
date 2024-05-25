@@ -103,3 +103,61 @@
   cd src
   python -m personal_assistant
   ```
+
+## 6. Використання
+
+Нижче зазначений перелік підтримуваних команд
+
+
+| Команда   | Опис                 | Параметри                                                                                            |
+|-----------|----------------------|------------------------------------------------------------------------------------------------------|
+| contacts  | Керування контактами | -h, --help: show this help message and exit                                                          |
+|           |                      | list usage: contacts list [-h]                                                           |
+|           |                      |                                                                                                      |
+|           |                      | add usage: contacts add [-h] --name NAME [--birthday BIRTHDAY] [--note NOTE]     |
+|           |                      |                                                                                                      |
+|           |                      | edit usage: contacts edit [-h] --id ID [--name NAME] [--birthday BIRTHDAY] [--note NOTE] |
+|           |                      |                                                                                                      |
+|           |                      | delete usage: contacts delete [-h] --id ID                                               |
+|           |                      |                                                                                                      |
+|           |                      | search usage: contacts search [-h] --q Q [--by BY]                                       |
+|           |                      |                                                                                                      |
+|           |                      | add_phone usage: contacts add_phone [-h] --id ID --phone PHONE                           |
+|           |                      |                                                                                                      |
+|           |                      | delete_phone usage: contacts delete_phone [-h] --id ID --phone PHONE                     |
+|           |                      |                                                                                                      |
+|           |                      | add_email usage: contacts add_email [-h] --id ID --email EMAIL                           |
+|           |                      |                                                                                                      |
+|           |                      | delete_email usage: contacts delete_email [-h] --id ID --email EMAIL                     |
+|           |                      |                                                                                                      |
+|           |                      | add_address usage: contacts add_address [-h] --id ID --address ADDRESS                   |
+|           |                      |                                                                                                      |
+|           |                      | delete_address usage: contacts delete_address [-h] --id ID --address ADDRESS             |
+|           |                      |                                                                                                      |
+|           |                      | add_tag usage: contacts add_tag [-h] --id ID --tag TAG                                   |
+|           |                      |                                                                                                      |
+|           |                      | delete_tag usage: contacts delete_tag [-h] --id ID --tag TAG                             |
+|           |                      |                                                                                                      |
+|           |                      | anniversaries usage: contacts anniversaries [-h] [--days DAYS]                           |
+| notes     | Керування нотатками  | -h, --help: show this help message and exit                                                          |
+|           |                      | add usage: notes add [-h] --content CONTENT [CONTENT ...]                                |
+|           |                      |                                                                                                      |
+|           |                      | edit usage: notes edit [-h] --id ID --content CONTENT [CONTENT ...]                      |
+|           |                      |                                                                                                      |
+|           |                      | delete usage: notes delete [-h] --id ID                                                  |
+|           |                      |                                                                                                      |
+|           |                      | search usage: notes search [-h] [--content CONTENT [CONTENT ...]] [--tag TAG] [--id ID]  |
+|           |                      |                                                                                                      |
+|           |                      | add_tag usage: notes add_tag [-h] --id ID --tag TAG                                      |
+|           |                      |                                                                                                      |
+|           |                      | delete_tag usage: notes delete_tag [-h] --id ID --tag TAG                                |
+|           |                      |                                                                                                      |
+|           |                      | archive usage: notes archive [-h] --id ID                                                |
+|           |                      |                                                                                                      |
+|           |                      | restore usage: notes restore [-h] --id ID                                                |
+|           |                      |                                                                                                      |
+|           |                      | view_active usage: notes view_active [-h]                                                |
+|           |                      |                                                                                                      |
+|           |                      | view_archived usage: notes view_archived [-h]                                            |
+|           |                      |                                                                                                      |
+|           |                      | view_history usage: notes view_history [-h] --id ID                                      |
