@@ -1,11 +1,11 @@
 """
-This module contains the enums for the command types and entity types.
+This module contains enums for command types, arguments and help text.
 """
 from enum import Enum
 
 class Command(Enum):
     """
-    Enum class for command types
+    Enum for command types
     """
     ADD = "add"
     EDIT = "edit"
@@ -30,7 +30,7 @@ class Command(Enum):
 
 class Argument(Enum):
     """
-    Enum class for argument types
+    Enum for argument types
     """
     ID = "id"
     NAME = "name"
@@ -43,12 +43,17 @@ class Argument(Enum):
     ADDRESS = "address"
     TAG = "tag"
     DAYS = "days"
+    CONTENT = "content"
+    SEARCH_CONTENT = "search_content"
+    SEARCH_TAG = "search_tag"
 
 class HelpText(Enum):
     """
-    Enum class for help text strings
+    Enum for help text
     """
     CONTACT_COMMANDS = 'Команди для керування контактами'
+    NOTE_COMMANDS = 'Команди для керування нотатками'
+    
     LIST = 'Показати всі контакти'
     ADD = 'Додати контакт'
     EDIT = 'Редагувати контакт'
@@ -63,7 +68,7 @@ class HelpText(Enum):
     ADD_TAG = 'Додати тег до контакта'
     DELETE_TAG = 'Видалити тег з контакта'
     ANIVERSARIES = 'Показати наближені дні народження'
-    
+
     ARGUMENT_ID = 'ID контакта для редагування'
     ARGUMENT_NAME = 'Ім\'я контакту'
     ARGUMENT_BIRTHDAY = 'Дата народження'
@@ -75,10 +80,25 @@ class HelpText(Enum):
     ARGUMENT_ADDRESS = 'Адреса'
     ARGUMENT_TAG = 'Тег для додавання'
     ARGUMENT_DAYS = 'Період в днях (7 за замовчуванням)'
+    ARGUMENT_CONTENT = 'Зміст нотатки'
+    ARGUMENT_SEARCH_CONTENT = 'Текст для пошуку в нотатках'
+    ARGUMENT_SEARCH_TAG = 'Тег для фільтрації нотаток'
+
+    ADD_NOTE = 'Додати нотатку'
+    EDIT_NOTE = 'Редагувати нотатку'
+    DELETE_NOTE = 'Видалити нотатку'
+    SEARCH_NOTE = 'Пошук нотаток'
+    ADD_TAG_NOTE = 'Додати тег до нотатки'
+    DELETE_TAG_NOTE = 'Видалити тег з нотатки'
+    ARCHIVE_NOTE = 'Заархівувати нотатку'
+    RESTORE_NOTE = 'Розархівувати нотатку'
+    VIEW_ACTIVE_NOTES = 'Показати всі не заархівовані нотатки'
+    VIEW_ARCHIVED_NOTES = 'Показати всі заархівовані нотатки'
+    VIEW_HISTORY_NOTE = 'Переглянути історію нотатки'
 
 class Messages(Enum):
     """
-    Enum class for messages
+    Enum for messages
     """
     CONTACT_ADDED = "Контакт {0} успішно додано з ID {1}"
     CONTACT_UPDATED = "Контакт {0} успішно оновлено"
@@ -97,6 +117,28 @@ class Messages(Enum):
     NO_ADDRESS_BOOK_FOUND = "No address book found. Creating a new one."
     ERROR_LOADING_ADDRESS_BOOK = "An error occurred while loading the address book: {0}"
 
+    NOTE_ADDED = "Note added: {0} | ID: {1}"
+    NOTE_UPDATED = "Note {0} updated."
+    NOTE_DELETED = "Note with ID {0} deleted."
+    SEARCHING_NOTES = "Searching notes... Content: {0}, Tag: {1}, ID: {2}"
+    FOUND_NOTES = "Found notes:"
+    NO_NOTES_FOUND = "No notes found by your request."
+    ADDING_TAG = "Adding tag {0} to note {1}"
+    TAG_ADDED_TO_NOTE = "Tag {0} added to note {1}."
+    DELETING_TAG = "Deleting tag {0} from note {1}"
+    TAG_DELETED_FROM_NOTE = "Tag {0} removed from note {1}."
+    NOTE_ARCHIVED = "Note {0} archived."
+    NOTE_RESTORED = "Note with ID {0} restored."
+    ACTIVE_NOTES = "Active notes:"
+    NO_ACTIVE_NOTES = "No active notes found."
+    ARCHIVED_NOTES = "Archived notes:"
+    NO_ARCHIVED_NOTES = "No archived notes found."
+    HISTORY_FOR_NOTE = "History for note with ID: {0}:"
+    NO_HISTORY_FOR_NOTE = "No history found for note {0}."
+    NOTE_NOT_FOUND = "Note {0} not found."
+    LOADING_NOTEBOOK = "Loading notebook..."
+    NO_NOTEBOOK_FOUND = "No notebook found. Creating a new one."
+    ERROR_LOADING_NOTEBOOK = "An error occurred while loading the notebook: {0}"
 
 class Entity(Enum):
     """
