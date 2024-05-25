@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Dict, List, Optional
 
 from personal_assistant.enums import EntityType
-from personal_assistant.models import Note
+from personal_assistant.models import Note, NoteHistoryEntry
 from personal_assistant.services import StorageService, TagManagerService
 
 class Notebook:
@@ -87,6 +87,7 @@ class Notebook:
                 tags=note_data['tags'],
                 note_id=note_data['note_id']
             )
+            note.note_history = [NoteHistoryEntry.from_dict(entry) for entry in note_data['note_history']]
             note.created_at = datetime.fromisoformat(note_data['created_at'])
             note.updated_at = datetime.fromisoformat(note_data['updated_at'])
             note.is_archived = note_data['is_archived']
