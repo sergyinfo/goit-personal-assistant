@@ -14,7 +14,7 @@ class Note:
     A class to represent a note
     """
     def __init__(self, text: str, tag_manager, tags: Optional[List[str]] = None, note_id: Optional[str] = None, default_tags: Optional[List[str]] = None) -> None:
-        self.note_id: str = note_id or str(uuid.uuid4())
+        self.note_id: str = note_id or str(uuid.uuid4())[:8]
         self.text: str = text
         self.created_at: datetime = datetime.now()
         self.updated_at: datetime = datetime.now()
@@ -84,11 +84,32 @@ class Note:
         """
         return self.note_history
     
-    def to_dict(self) -> dict:
+    def to_dict(self):
         """
         Return a dictionary representation of the note
         """
-        return self.text
+        return {
+            "note_id": self.note_id,
+            "text": self.text,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+            "tags": self.tags,
+            "is_archived": self.is_archived,
+            "note_history": [entry.to_dict() for entry in self.note_history]
+        }
+
+    @classmethod
+    def from_dict(cls, data, tag_manager):
+        """
+        Create a note object from a dictionary
+        """
+        note = cls(data['text'], tag_manager, data.get('tags', []), data['note_id'])
+        note.created_at = datetime.fromisoformat(data['created_at'])
+        note.updated_at = datetime.fromisoformat(data['updated_at'])
+        note.is_archived = data['is_archived']
+        note.note_history = [NoteHistoryEntry.from_dict(entry) for entry in data['note_history']]
+        return note
+
 
     def __str__(self) -> str:
         return (f"Note(id={self.note_id}, text={self.text}, created_at={self.created_at}, "

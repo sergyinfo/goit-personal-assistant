@@ -4,12 +4,11 @@ Functionality for note commands
 import argparse
 
 from tabulate import tabulate
-from colorama import Fore, Style, init
+from colorama import Fore, Style
 from personal_assistant.enums.command_types import Command
 from personal_assistant.models.note import Note
 from personal_assistant.services.notebook import Notebook
-from personal_assistant.services.storage.json_storage import JsonStorage
-from personal_assistant.services.storage.pickle_storage import PickleStorage
+from personal_assistant.services.storage.secure_json_storage import SecureJsonStorage
 from personal_assistant.services.storage_service import StorageService
 from personal_assistant.utils.decorators import input_error
 
@@ -76,7 +75,7 @@ def handle_note_commands(parser: argparse.ArgumentParser) -> None:
     view_history_parser.add_argument('--id', required=True, help='ID нотатки')
     view_history_parser.set_defaults(func=view_note_history)
 
-storage_service = StorageService(JsonStorage())
+storage_service = StorageService(SecureJsonStorage())
 notebook = Notebook(storage_service)
 
 try:
@@ -110,7 +109,7 @@ def delete_note(args: argparse.Namespace) -> None:
     notebook.remove_note(args.id)
     print(f"Note with ID {args.id} deleted.")
     notebook.save()
-        
+
 @input_error
 def search_notes(args: argparse.Namespace) -> None:
     """Search notes by content or tag or ID"""
@@ -127,7 +126,7 @@ def search_notes(args: argparse.Namespace) -> None:
     else:
         notes = []
     for note in notes:
-        print(note)        
+        print(note)
 
 @input_error
 def add_tag_to_note(args: argparse.Namespace) -> None:
@@ -138,7 +137,7 @@ def add_tag_to_note(args: argparse.Namespace) -> None:
         note.add_tag(args.tag)
         print(f"Tag {args.tag} added to note {args.id}.")
     notebook.save()
-        
+
 @input_error
 def delete_tag_from_note(args: argparse.Namespace) -> None:
     print(f"Deleting tag {args.tag} from note {args.id}")
@@ -156,7 +155,7 @@ def archive_note(args: argparse.Namespace) -> None:
         note.archive()
         print(f"Note {args.id} archived.")
     notebook.save()
-        
+
 @input_error
 def restore_note(args: argparse.Namespace) -> None:
     """Restore a note by ID"""
@@ -165,7 +164,7 @@ def restore_note(args: argparse.Namespace) -> None:
         note.restore()
         print(f"Note with ID {args.id} restored.")
     notebook.save()
-        
+
 @input_error
 def view_active_notes(args: argparse.Namespace) -> None:
     """View all active notes"""
@@ -177,7 +176,7 @@ def view_active_notes(args: argparse.Namespace) -> None:
         print(tabulate(table, headers=headers, tablefmt="grid"))
     else:
         print("No active notes found.")
-        
+
 @input_error
 def view_archived_notes(args: argparse.Namespace) -> None:
     """View all archived notes"""
