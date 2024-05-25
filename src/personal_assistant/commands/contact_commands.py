@@ -2,12 +2,25 @@
 Module for contact commands
 """
 import argparse
-from personal_assistant.enums.military_command_types import Command, Argument, HelpText, Messages
+import os
+import importlib
+from dotenv import load_dotenv
+
 from personal_assistant.models.contact import Contact
 from personal_assistant.models import PhoneNumber, Birthday, Note, EmailAddress, Address
 from personal_assistant.services import AddressBook, StorageService
 from personal_assistant.services.storage.secure_json_storage import SecureJsonStorage
 from personal_assistant.utils.decorators import input_error
+
+load_dotenv()
+commands_parser = os.getenv('COMMANDS_PARSER', 'command_types')
+module_path = f'personal_assistant.enums.{commands_parser}'
+command_module = importlib.import_module(module_path)
+
+Command = command_module.Command
+Argument = command_module.Argument
+HelpText = command_module.HelpText
+Messages = command_module.Messages
 
 def handle_contact_commands(parser: argparse.ArgumentParser) -> None:
     """
