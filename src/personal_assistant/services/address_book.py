@@ -56,8 +56,9 @@ class AddressBook:
         """
         Checks if a contact matches the given keyword.
         """
-        is_any = field == 'any'
+        is_any = field == 'any' or field is None
         keyword = keyword.lower()
+
         if ('name' == field or is_any) and keyword in contact.name.lower():
             return True
         if ('phone' == field or is_any) and any(keyword in str(phone).lower() for phone in contact.phone_numbers):
