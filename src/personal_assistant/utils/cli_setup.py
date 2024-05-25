@@ -4,6 +4,8 @@ Module for setting up the command line interface
 import os
 import platform
 import shutil
+import importlib
+from dotenv import load_dotenv
 from typing import Dict, Tuple
 import argparse
 from tabulate import tabulate
@@ -11,9 +13,15 @@ from colorama import init, Fore, Back
 from pyfiglet import Figlet
 from personal_assistant.commands.contact_commands import handle_contact_commands
 from personal_assistant.commands.note_commands import handle_note_commands
-from personal_assistant.enums.command_types import Entity
+from personal_assistant.enums.military_command_types import Entity
 
 init(autoreset=True)
+load_dotenv()
+commands_parser = os.getenv('COMMANDS_PARSER', 'command_types')
+module_path = f'personal_assistant.enums.{commands_parser}'
+command_module = importlib.import_module(module_path)
+
+Entity = command_module.Entity
 
 def setup_parsers() -> Tuple[argparse.ArgumentParser, Dict[str, argparse.ArgumentParser]]:
     """
