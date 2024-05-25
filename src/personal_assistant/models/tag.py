@@ -27,6 +27,25 @@ class Tag:
         """
         self.associations[obj_type].discard(obj_id)
 
+    def to_dict(self) -> Dict:
+        """
+        Return the tag as a dictionary
+        """
+        return {
+            "name": self.name,
+            "associations": {obj_type.value: list(ids) for obj_type, ids in self.associations.items()},
+        }
+    
+    @classmethod
+    def from_dict(cls, tag_dict: Dict) -> 'Tag':
+        """
+        Create a tag from a dictionary
+        """
+        tag = cls(tag_dict["name"])
+        for obj_type, ids in tag_dict["associations"].items():
+            tag.associations[EntityType(obj_type)] = set(ids)
+        return tag
+
     def __str__(self) -> str:
         return f"Tag(name={self.name}, associations={self.associations})"
 

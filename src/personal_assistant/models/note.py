@@ -83,12 +83,11 @@ class Note:
         Get the history of the note
         """
         return self.note_history
-    
+
     def to_dict(self):
         """
         Return a dictionary representation of the note
         """
-        print([entry.to_dict() for entry in self.note_history])
         return {
             "note_id": self.note_id,
             "text": self.text,
@@ -108,7 +107,6 @@ class Note:
         note.created_at = datetime.fromisoformat(data['created_at'])
         note.updated_at = datetime.fromisoformat(data['updated_at'])
         note.is_archived = data['is_archived']
-        print(data['note_history'])
         note.note_history = [NoteHistoryEntry.from_dict(entry) for entry in data['note_history']]
         return note
 
