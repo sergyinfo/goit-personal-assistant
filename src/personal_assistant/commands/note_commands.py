@@ -38,6 +38,7 @@ def handle_note_commands(parser: argparse.ArgumentParser) -> None:
     search_parser = subparsers.add_parser(Command.SEARCH.value, help='Пошук нотаток')
     search_parser.add_argument('--content', help='Текст для пошуку в нотатках', nargs='+')
     search_parser.add_argument('--tag', help='Тег для фільтрації нотаток')
+    search_parser.add_argument('--id', help='ID для фільтрації нотаток')
     search_parser.set_defaults(func=search_notes)
 
     # Add tag to note
