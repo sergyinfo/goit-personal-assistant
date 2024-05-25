@@ -15,6 +15,18 @@ class Tag:
             EntityType.NOTE: set(),
         }
 
+    def is_associated_with(self, obj_type: EntityType, obj_id: str) -> bool:
+        """
+        Check if the tag is associated with an object
+        """
+        return obj_id in self.associations[obj_type]
+    
+    def get_associations(self) -> Set[str]:
+        """
+        Get the associations of the tag with an object type
+        """
+        return self.associations
+
     def associate_with(self, obj_type: EntityType, obj_id: str) -> None:
         """
         Associate the tag with an object

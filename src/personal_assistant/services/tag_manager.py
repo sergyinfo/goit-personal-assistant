@@ -34,7 +34,7 @@ class TagManagerService:
             if not tag.associations:
                 del self.tags[tag_name]
 
-    def search_by_tag(self, tag_name: str):
+    def search_by_tag(self, tag_name: str) -> List[str]:
         """
         Searches for objects associated with a tag.
         """
