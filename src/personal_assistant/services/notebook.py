@@ -33,6 +33,12 @@ class Notebook:
     def find_notes_by_tag(self, tag: str) -> List[Note]:
         note_ids = self.tag_manager.search_by_tag(tag).get(EntityType.NOTE, [])
         return [self.notes[note_id] for note_id in note_ids if note_id in self.notes]
+    
+    def get_active_notes(self) -> List[Note]:
+        return [note for note in self.notes.values() if not note.is_archived]
+
+    def get_archived_notes(self) -> List[Note]:
+        return [note for note in self.notes.values() if note.is_archived]
 
     def save(self) -> None:
         data = {note_id: note.__dict__ for note_id, note in self.notes.items()}

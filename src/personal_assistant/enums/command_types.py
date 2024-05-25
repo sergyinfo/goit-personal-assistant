@@ -22,6 +22,11 @@ class Command(Enum):
     ADD_TAG = "add_tag"
     DELETE_TAG = "delete_tag"
     ANIVERSARIES = "aniversaries"
+    ARCHIVE = "archive"
+    RESTORE = "restore"
+    VIEW_ACTIVE = "view_active"
+    VIEW_ARCHIVED = "view_archived"
+    VIEW_HISTORY = "view_history"
 
 class Entity(Enum):
     """
