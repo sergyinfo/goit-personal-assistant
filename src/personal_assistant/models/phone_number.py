@@ -25,9 +25,9 @@ class PhoneNumber:
         foreign numbers without a two-digit code = 9 digits
         """
         if not self.number.isdigit():
-            raise ValueError("Phone number must contain only digits.")
+            raise ValueError("Номер телефону повинен містити лише цифри.")
         if not (9 <= len(self.number) <= 12):
-            raise ValueError("Phone number must contain between 9 and 12 digits, including the country code.")
+            raise ValueError("Номер телефону повинен містити від 9 до 12 цифр, включаючи код країни.")
 
     def __eq__(self, other):
         if isinstance(other, PhoneNumber):
