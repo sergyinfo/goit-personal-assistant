@@ -18,7 +18,7 @@ class EmailAddress:
         Validate the email address
         """
         if not self.EMAIL_PATTERN.match(self.email):
-            raise ValueError(f"Email address {self.email} is invalid")
+            raise ValueError(f"Неправильний формат електронної адреси: {self.email}")
 
     def to_dict(self):
         """
